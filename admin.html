@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Big Boss</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="auth.js"></script>
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      /* background: linear-gradient(to bottom right, #d9f3ff, #ecfaff); */
+      background-image: url('assets/home-bg-small-.jpeg');
+      background-repeat: no-repeat;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      background-size: cover;
+    }
+  </style>
+</head>
+
+<body onload="protectAdminPage()">
+  <header class="slide-down">
+    <h1>BIG BOSS</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="today-result.html">Today Result</a>
+      <a href="previous-result.html">Previous Result</a>
+      <a href="result-file-download.html">Download</a>
+      <a href="update-results.html">Update</a>
+      <a onclick="logout()">Logout</a>
+    </nav>
+  </header>
+
+  <section class="draw-section fade-in">
+    <div class="form-container">
+      <div class="form-group">
+        <label for="date">Select Date</label>
+        <input type="date" id="date" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="show">Select Show</label>
+        <select id="show" class="form-input" onchange="mapShowToTime()">
+          <option value="">-- Select Show --</option>
+          <option value="1">Show 1 (10:00)</option>
+          <option value="2">Show 2 (11:00)</option>
+          <option value="3">Show 3 (12:00)</option>
+          <option value="4">Show 4 (01:00 PM)</option>
+          <option value="5">Show 5 (05:00 PM)</option>
+          <option value="6">Show 6 (06:00 PM)</option>
+          <option value="7">Show 7 (07:00 PM)</option>
+          <option value="8">Show 8 (08:00 PM)</option>
+        </select>
+      </div>
+
+      <!-- Hidden Time Input -->
+      <input type="hidden" id="time">
+
+      <div class="form-group">
+        <label for="number">Winning Number</label>
+        <input type="text" id="number" class="form-input" maxlength="3">
+      </div>
+
+      <div class="form-group">
+        <button onclick="submitResult()">Submit</button>
+      </div>
+
+      <p id="status"></p>
+    </div>
+  </section>
+
+  <script>
+    const db = firebase.database();
+
+    const showTimeMap = {
+      "1": "10:00",
+      "2": "11:00",
+      "3": "12:00",
+      "4": "13:00",
+      "5": "17:00",
+      "6": "18:00",
+      "7": "19:00",
+      "8": "20:00"
+    };
+
+    function mapShowToTime() {
+      const selectedShow = document.getElementById("show").value;
+      const mappedTime = showTimeMap[selectedShow] || "";
+      document.getElementById("time").value = mappedTime;
+    }
+
+    function submitResult() {
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+      const number = document.getElementById("number").value;
+      const status = document.getElementById("status");
+
+      if (!date || !time || !number || number.length !== 3) {
+        status.style.color = 'red';
+        status.innerText = "❌ Please fill all fields with a valid 3-digit number.";
+        return;
+      }
+
+      db.ref("results/" + date).push({ time, number })
+        .then(() => {
+          status.style.color = 'green';
+          status.innerText = "✅ Result saved successfully!";
+          document.getElementById("date").value = '';
+          document.getElementById("show").value = '';
+          document.getElementById("time").value = '';
+          document.getElementById("number").value = '';
+        })
+        .catch(error => {
+          status.style.color = 'red';
+          status.innerText = "❌ Error: " + error.message;
+        });
+    }
+  </script>
+</body>
+
+</html>

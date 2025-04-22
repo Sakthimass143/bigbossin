@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today Result - Big Boss</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      /* background: linear-gradient(to bottom right, #d9f3ff, #ecfaff); */
+      background-image: url('assets/today-result-bg.jpeg');
+      background-repeat: no-repeat;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      background-size: cover;
+    }
+
+    header {
+      width: 100%;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+
+    .draw {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      border: gold dotted 10px;
+      background: rgb(7, 7, 7);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      color: white;
+    }
+
+    .draw-times {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .draw-times button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #c9eaff, #a4d4ff);
+      color: #0077cc;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0, 119, 204, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .draw h3{
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .draw-times button:hover {
+      background: linear-gradient(135deg, #b0e2ff, #88c8ff);
+    }
+
+    .draw-times button.active {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 200, 255, 0.3);
+    }
+
+    .draw {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .draw.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .draw.visible {
+      display: block;
+    }
+
+    .prize {
+      font-size: 24px;
+      font-weight: bold;
+      color: gold;
+    }
+
+    .not-available {
+      font-size: 18px;
+      color: #999;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="slide-down">
+    <h1>BIG BOSS</h1>
+    <nav class="fade-in">
+      <a href="index.html">Home</a>
+      <a href="today-result.html" class="active">Today Result</a>
+      <a href="previous-result.html">Previous Result</a>
+      <a href="result-file-download.html">Result File Download</a>
+    </nav>
+  </header>
+
+  <section class="result-section fade-in">
+    <h2 style="text-align:center;">🎯 Today's Results</h2>
+    <div class="draw-times" id="drawTabs"></div>
+    <div id="drawResults"></div>
+    <p id="status" style="text-align:center; color: gray;"></p>
+  </section>
+
+  <footer class="fade-in">
+    <p>© 2025 Big Boss | All Rights Reserved</p>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDcmamLjhZh8x6wRAiDeEtuB_Mky2tCOkI",
+      authDomain: "lottery-e05d5.firebaseapp.com",
+      databaseURL: "https://lottery-e05d5-default-rtdb.firebaseio.com",
+      projectId: "lottery-e05d5",
+      storageBucket: "lottery-e05d5.appspot.com",
+      messagingSenderId: "357588305425",
+      appId: "1:357588305425:web:d1608265a0743fdda693b0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const showTimes = [
+      "10:00", "11:00", "12:00", "13:00",
+      "17:00", "18:00", "19:00", "20:00"
+    ];
+
+    function formatTime12hr(timeStr) {
+      const [hour, minute] = timeStr.split(':');
+      const h = parseInt(hour);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const hr12 = h % 12 || 12;
+      return `${hr12}:${minute} ${ampm}`;
+    }
+
+    function renderTodayResults() {
+      const today = new Date().toISOString().split('T')[0];
+      const now = new Date();
+      const currentTime = now.toTimeString().slice(0, 5);
+      const drawTabs = document.getElementById('drawTabs');
+      const drawResults = document.getElementById('drawResults');
+      const status = document.getElementById('status');
+
+      drawTabs.innerHTML = '';
+      drawResults.innerHTML = '';
+      status.innerText = '';
+
+      db.ref("results/" + today).once('value').then(snapshot => {
+        const data = snapshot.val() || {};
+        const resultMap = {};
+
+        Object.values(data).forEach(entry => {
+          resultMap[entry.time] = entry;
+        });
+
+        showTimes.forEach((time, index) => {
+          const timeLabel = formatTime12hr(time);
+          const tabId = "draw" + index;
+
+          // Tab Button
+          const btn = document.createElement('button');
+          btn.innerText = timeLabel;
+          btn.onclick = () => showResult(tabId, btn);
+          if (index === 0) btn.classList.add("active");
+          drawTabs.appendChild(btn);
+
+          // Result Block
+          const div = document.createElement('div');
+          div.className = 'draw' + (index === 0 ? ' visible' : '');
+          div.id = tabId;
+
+          if (resultMap[time] && time <= currentTime) {
+            const number = resultMap[time].number;
+            div.innerHTML = `
+              <h3>Draw Time: <span style="color:gold;"> ${timeLabel}</span></h3>
+              <p><strong>1st Prize (₹15,000):</strong> <span class="prize">${number}</span></p>
+              <p><strong>2nd Prize (₹500):</strong> <span class="prize">${number.slice(-2)}</span></p>
+              <p><strong>3rd Prize (₹50):</strong> <span class="prize">${number.slice(-1)}</span></p>
+            `;
+          } else {
+            div.innerHTML = `
+              <h3>Draw Time: ${timeLabel}</h3>
+              <p class="not-available">🕒 Result not released yet.</p>
+            `;
+          }
+
+          drawResults.appendChild(div);
+        });
+      });
+    }
+
+    function showResult(id, btn) {
+      document.querySelectorAll(".draw-times button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      document.querySelectorAll(".draw").forEach(d => d.classList.remove("visible"));
+      document.getElementById(id).classList.add("visible");
+    }
+
+    document.addEventListener('DOMContentLoaded', renderTodayResults);
+  </script>
+</body>
+
+</html>

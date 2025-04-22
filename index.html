@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Big Boss</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-image: url('assets/home-page.gif');
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.7rem;
+      color: gold;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 4px rgba(0, 119, 204, 0.1);
+      display: inline-block;
+      border: 2px solid gold;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* body {
+      font-family: 'Outfit', sans-serif;
+      background-image: url('assets/home-page.gif');
+      background-repeat: no-repeat;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      background-size: cover;
+    } */
+
+    .draw-time-container {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      padding: 10px;
+      flex-wrap: wrap;
+      margin-top: 5%;
+    }
+
+    .draw-box {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #f1faee;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: rgb(0, 0, 0);
+      padding: 10px 20px;
+      border-radius: 50px;
+      backdrop-filter: blur(5px);
+      letter-spacing: 1px;
+      text-align: center;
+      min-width: 180px;
+    }
+
+    #drawTime,
+    #remainingTime {
+      color: #ffdd57;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .blinking-border {
+      display: flex;
+      position: relative;
+      padding: 40px;
+      background-color: #000000;
+      border-radius: 50%;
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 5%;
+    }
+
+    .blinking-border::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 10px dotted gold;
+      border-radius: 50%;
+      animation: blinkBorder 0.6s infinite;
+    }
+
+    @keyframes blinkBorder {
+
+      0%,
+      100% {
+        border-color: gold;
+      }
+
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    .digit {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      z-index: 1;
+    }
+
+    .blinking-row {
+      display: flex;
+      gap: 35px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    footer {
+      margin-top: 50px;
+      color: white;
+    }
+
+    .main-section {
+      margin-top: 5%;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10%;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 20px;
+      border: 10px dotted gold!;
+      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+    }
+
+    .main-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('assets/home-page.gif');
+      background-size: cover;
+      background-position: center;
+      filter: blur(5px);
+      transform: scale(1.1);
+      z-index: 0;
+    }
+
+    .main-container>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Small Devices (Phones) */
+    @media (max-width: 480px) {
+      .main-section {
+        margin-top: -10%;
+      }
+
+      .main-container {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        padding: 10%;
+        border-radius: 5%;
+        width: 85%;
+        margin-left: 30px;
+      }
+    }
+
+    /* Medium Devices (Tablets) */
+    @media (min-width: 481px) and (max-width: 1024px) {
+      /* tablet styles */
+    }
+
+    /* Large Devices (Desktops) */
+    @media (min-width: 1025px) {
+      .main-section {
+        margin-top: -10%;
+      }
+    }
+
+    .blinking-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-top: 15px;
+    }
+
+    .digit-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .led-label {
+      font-size: 24px;
+      font-weight: 900;
+      font-family: 'Outfit', sans-serif;
+      text-shadow: 0 0 8px currentColor;
+      animation: glow 1.5s ease-in-out infinite;
+    }
+
+    /* Color styles for each letter */
+    .led-label.a {
+      color: gold;
+    }
+
+    .led-label.b {
+      color: orange;
+    }
+
+    .led-label.c {
+      color: #00ccff;
+    }
+
+    /* Glowing pulse animation */
+    @keyframes glow {
+
+      0%,
+      100% {
+        text-shadow:
+          0 0 5px currentColor,
+          0 0 10px currentColor,
+          0 0 20px currentColor;
+      }
+
+      50% {
+        text-shadow:
+          0 0 3px currentColor,
+          0 0 6px currentColor;
+      }
+    }
+
+    /* Blinking border setup (keep your existing one or paste below) */
+    .blinking-border {
+      display: flex;
+      position: relative;
+      padding: 40px;
+      background-color: black;
+      border-radius: 50%;
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .blinking-border::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 10px dotted gold;
+      border-radius: 50%;
+      animation: blinkBorder 0.6s infinite;
+    }
+
+    @keyframes blinkBorder {
+
+      0%,
+      100% {
+        border-color: gold;
+      }
+
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    .digit {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="slide-down">
+    <nav class="fade-in">
+      <a href="index.html">Home</a>
+      <a href="today-result.html">Today Result</a>
+      <a href="previous-result.html">Previous Result</a>
+      <a href="result-file-download.html">Result File Download</a>
+    </nav>
+  </header>
+  <section class="main-section fade-in">
+    <div class="main-container">
+      <div>
+        <h1>BIG BOSS</h1>
+      </div>
+      <div class="draw-time-container">
+        <div class="draw-box">Draw Time: <span id="drawTime">--:--</span></div>
+        <div class="draw-box">Remaining: <span id="remainingTime">--</span></div>
+      </div>
+
+      <!-- <div class="blinking-row">
+        <div class="blinking-border">
+          <div id="digit1" class="digit">–</div>
+        </div>
+        <div class="blinking-border">
+          <div id="digit2" class="digit">–</div>
+        </div>
+        <div class="blinking-border">
+          <div id="digit3" class="digit">–</div>
+        </div>
+      </div> -->
+
+      <div class="blinking-row">
+        <div class="digit-container">
+          <!-- <div class="led-label a"></div> -->
+          <img height="50px" src="assets/A.png" alt="">
+          <div class="blinking-border">
+            <div id="digit1" class="digit">–</div>
+          </div>
+        </div>
+        <div class="digit-container">
+          <!-- <div class="led-label b">B</div> -->
+          <img height="50px" src="assets/B.png" alt="">
+          <div class="blinking-border">
+            <div id="digit2" class="digit">–</div>
+          </div>
+        </div>
+        <div class="digit-container">
+          <!-- <div class="led-label c">C</div> -->
+          <img height="50px" src="assets/C.png" alt="">
+          <div class="blinking-border">
+            <div id="digit3" class="digit">–</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 10%;">
+        <h2 style="color: white;font-size: 40px;">3 Digit Game</h2>
+      </div>
+      <!-- <p id="result-status" style="margin-top: 5%; color: white; font-weight: bold;font-size: 20px;"></p> -->
+
+    </div>
+  </section>
+
+  <footer class="fade-in">
+    <p>© 2025 Big Boss | All Rights Reserved</p>
+  </footer>
+
+  <audio id="bg-music" autoplay loop>
+    <source src="assets/music-for-page.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const audio = document.getElementById("bg-music");
+      audio.volume = 0.2;
+
+      const tryPlay = () => {
+        audio.play().catch(() => {
+          document.body.addEventListener("click", () => {
+            audio.play();
+          }, { once: true });
+        });
+      };
+
+      tryPlay();
+    });
+  </script>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDcmamLjhZh8x6wRAiDeEtuB_Mky2tCOkI",
+      authDomain: "lottery-e05d5.firebaseapp.com",
+      databaseURL: "https://lottery-e05d5-default-rtdb.firebaseio.com",
+      projectId: "lottery-e05d5",
+      storageBucket: "lottery-e05d5.appspot.com",
+      messagingSenderId: "357588305425",
+      appId: "1:357588305425:web:d1608265a0743fdda693b0",
+      measurementId: "G-GE938RN0DB"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function formatTime12hr(timeStr) {
+      const [hour, minute] = timeStr.split(':');
+      const h = parseInt(hour);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const hr12 = h % 12 || 12;
+      return `${hr12}:${minute} ${ampm}`;
+    }
+
+    function formatCountdown(ms) {
+      if (ms < 0) return "Result time passed";
+      const totalSecs = Math.floor(ms / 1000);
+      const hrs = Math.floor(totalSecs / 3600);
+      const mins = Math.floor((totalSecs % 3600) / 60);
+      const secs = totalSecs % 60;
+      return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m ${secs}s`;
+    }
+
+    function updateCard(number) {
+      document.getElementById('digit1').innerText = number[0];
+      document.getElementById('digit2').innerText = number[1];
+      document.getElementById('digit3').innerText = number[2];
+    }
+
+    function fetchLatestDraw() {
+      const today = new Date().toISOString().split('T')[0];
+      const now = new Date();
+      const currentTime = now.toTimeString().slice(0, 5); // HH:MM
+
+      db.ref('results/' + today).once('value').then(snapshot => {
+        const results = snapshot.val();
+        const status = document.getElementById('result-status');
+        const drawTimeEl = document.getElementById('drawTime');
+        const remainingEl = document.getElementById('remainingTime');
+
+        if (!results) {
+          drawTimeEl.innerText = '--:--';
+          remainingEl.innerText = '--';
+          status.innerText = "⏳ No draws available yet.";
+          updateCard('–––');
+          return;
+        }
+
+        const entries = Object.values(results).sort((a, b) => a.time.localeCompare(b.time));
+        let currentDraw = null;
+        let nextDraw = null;
+
+        for (const entry of entries) {
+          if (entry.time <= currentTime) {
+            currentDraw = entry;
+          } else if (!nextDraw) {
+            nextDraw = entry;
+          }
+        }
+
+        if (currentDraw) {
+          updateCard(currentDraw.number);
+          drawTimeEl.innerText = formatTime12hr(currentDraw.time);
+          status.innerText = `✅ Result for ${formatTime12hr(currentDraw.time)} announced`;
+        } else {
+          updateCard('–––');
+          status.innerText = "⏳ Waiting for first result...";
+        }
+
+        if (nextDraw) {
+          const nextTime = new Date(today + 'T' + nextDraw.time + ':00');
+          const timeDiff = nextTime - now;
+          drawTimeEl.innerText = formatTime12hr(nextDraw.time);
+          remainingEl.innerText = formatCountdown(timeDiff);
+        } else if (!currentDraw) {
+          drawTimeEl.innerText = '--:--';
+          remainingEl.innerText = '--';
+        }
+      }).catch(err => {
+        console.error(err);
+        document.getElementById('result-status').innerText = '❌ Error fetching result.';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchLatestDraw();
+      setInterval(fetchLatestDraw, 1000);
+    });
+  </script>
+</body>
+
+</html>
