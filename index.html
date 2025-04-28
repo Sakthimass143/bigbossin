@@ -7,6 +7,7 @@
   <title>Big Boss</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     html,
     body {
@@ -19,38 +20,40 @@
       background-image: url('assets/home-page.gif');
       background-repeat: no-repeat;
       background-size: cover;
+      background-position: center center;
       color: #1a1a1a;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       overflow-x: hidden;
       align-items: center;
+      font-family: 'Orbitron', sans-serif;
     }
 
     h1 {
-      font-size: 2.7rem;
+      font-size: 2rem;
       color: gold;
-      font-weight: bold;
+      font-weight: 800;
       letter-spacing: 1px;
-      text-shadow: 0 1px 4px rgba(0, 119, 204, 0.1);
-      display: inline-block;
-      border: 2px solid gold;
-      padding: 2px 6px;
-      border-radius: 4px;
+      margin-top: 13px;
+      /* text-shadow: 0 1px 4px rgba(0, 119, 204, 0.1); */
+      /* display: inline-block;
+      border: 2px solid gold; */
+      /* padding: 2px 6px; */
+      /* border-radius: 4px; */
     }
 
-    /* body {
-      font-family: 'Outfit', sans-serif;
-      background-image: url('assets/home-page.gif');
-      background-repeat: no-repeat;
-      color: #1a1a1a;
-      min-height: 100vh;
+    .logo-cont {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      overflow-x: hidden;
-      background-size: cover;
-    } */
+      justify-content: center;
+      gap: 10px;
+      border: gold 2px solid;
+      width: 100%;
+      border-radius: 4px;
+      padding: 2px 6px;
+      background-color: #000000;
+    }
 
     .draw-time-container {
       display: flex;
@@ -64,25 +67,26 @@
     .draw-box {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #f1faee;
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: 800;
       background-color: rgb(0, 0, 0);
       padding: 10px 20px;
       border-radius: 50px;
       backdrop-filter: blur(5px);
-      letter-spacing: 1px;
+      letter-spacing: 3px;
       text-align: center;
-      min-width: 180px;
+      min-width: 140%;
+      border: gold 2px solid;
     }
 
     #drawTime,
     #remainingTime {
       color: #ffdd57;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 25px;
     }
 
-    .blinking-border {
+    /* .blinking-border {
       display: flex;
       position: relative;
       padding: 40px;
@@ -118,7 +122,7 @@
       50% {
         border-color: transparent;
       }
-    }
+    } */
 
     .digit {
       font-size: 24px;
@@ -153,12 +157,12 @@
       width: 90%;
       max-width: 800px;
       border-radius: 20px;
-      border: 10px dotted gold!;
       color: white;
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+      margin-top: 30%;
     }
 
     .main-container::before {
@@ -181,8 +185,63 @@
       z-index: 1;
     }
 
-    /* Small Devices (Phones) */
+    .game-type {
+      font-size: 40px;
+      color: gold;
+      font-weight: 800;
+      /* text-shadow: 0 0 8px currentColor; */
+      letter-spacing: 1.5px;
+    }
+
+    .game-type-cont {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: black;
+      border-radius: 20px;
+      width: 100%;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      padding: 0.6rem 1.4rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 1rem;
+      box-shadow: 0 6px 16px rgba(0, 200, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #38f9d7, #43e97b);
+      color: #003f5c;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 764px) {}
+
     @media (max-width: 480px) {
+
+      button {
+        margin-top: -20px;
+      }
+
+      .game-type {
+        font-size: 30px !important;
+      }
+
+      .game-type-cont {
+        margin: 10%;
+      }
+
       .main-section {
         margin-top: -10%;
       }
@@ -195,15 +254,31 @@
         border-radius: 5%;
         width: 85%;
         margin-left: 30px;
+        margin-top: 5%;
+      }
+
+      .roller-container {
+        gap: 5px !important;
+      }
+
+      .game-type-cont {
+        padding: 6px;
       }
     }
 
-    /* Medium Devices (Tablets) */
+    .digit-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+
+
     @media (min-width: 481px) and (max-width: 1024px) {
       /* tablet styles */
     }
 
-    /* Large Devices (Desktops) */
     @media (min-width: 1025px) {
       .main-section {
         margin-top: -10%;
@@ -233,7 +308,6 @@
       animation: glow 1.5s ease-in-out infinite;
     }
 
-    /* Color styles for each letter */
     .led-label.a {
       color: gold;
     }
@@ -246,7 +320,6 @@
       color: #00ccff;
     }
 
-    /* Glowing pulse animation */
     @keyframes glow {
 
       0%,
@@ -264,7 +337,6 @@
       }
     }
 
-    /* Blinking border setup (keep your existing one or paste below) */
     .blinking-border {
       display: flex;
       position: relative;
@@ -308,6 +380,65 @@
       color: white;
       z-index: 1;
     }
+
+    .roller-container {
+      display: flex;
+      gap: 20px;
+    }
+
+    .digit-box {
+      background: #111;
+      border: 5px solid gold;
+      border-radius: 15px;
+      width: 100px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      color: gold;
+      box-shadow: 0 0 30px gold;
+    }
+
+    /* .led-border {
+            border: 10px dotted gold;
+            border-radius: 15px;
+        } */
+
+    .led-border {
+      display: flex;
+      position: relative;
+      background-color: #000000;
+      border-radius: 15px;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      margin: 10px;
+    }
+
+    .led-border::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 10px dotted gold;
+      border-radius: 15px;
+      animation: blinkBorder 0.6s infinite;
+    }
+
+    @keyframes blinkBorder {
+
+      0%,
+      100% {
+        border-color: gold;
+      }
+
+      50% {
+        border-color: transparent;
+      }
+    }
   </style>
 </head>
 
@@ -321,61 +452,96 @@
     </nav>
   </header>
   <section class="main-section fade-in">
-    <div class="main-container">
-      <div>
+    <div id="capture-container" class="main-container">
+      <div class="logo-cont">
+        <img width="50px" height="50px" src="assets/bigboss-logo.png" alt="">
         <h1>BIG BOSS</h1>
       </div>
       <div class="draw-time-container">
         <div class="draw-box">Draw Time: <span id="drawTime">--:--</span></div>
-        <div class="draw-box">Remaining: <span id="remainingTime">--</span></div>
+        <div class="draw-box ignore-on-screenshot">Remaining: <span id="remainingTime">--</span></div>
       </div>
-
-      <!-- <div class="blinking-row">
-        <div class="blinking-border">
-          <div id="digit1" class="digit">–</div>
-        </div>
-        <div class="blinking-border">
-          <div id="digit2" class="digit">–</div>
-        </div>
-        <div class="blinking-border">
-          <div id="digit3" class="digit">–</div>
-        </div>
-      </div> -->
-
-      <div class="blinking-row">
+      <div class="roller-container">
         <div class="digit-container">
-          <!-- <div class="led-label a"></div> -->
           <img height="50px" src="assets/A.png" alt="">
-          <div class="blinking-border">
-            <div id="digit1" class="digit">–</div>
+          <div class="led-border">
+            <div class="digit-box" id="digit1">0</div>
           </div>
         </div>
         <div class="digit-container">
-          <!-- <div class="led-label b">B</div> -->
           <img height="50px" src="assets/B.png" alt="">
-          <div class="blinking-border">
-            <div id="digit2" class="digit">–</div>
+          <div class="led-border">
+            <div class="digit-box" id="digit2">0</div>
           </div>
         </div>
         <div class="digit-container">
-          <!-- <div class="led-label c">C</div> -->
           <img height="50px" src="assets/C.png" alt="">
-          <div class="blinking-border">
-            <div id="digit3" class="digit">–</div>
+          <div class="led-border">
+            <div class="digit-box" id="digit3">0</div>
           </div>
         </div>
       </div>
-      <div style="margin-top: 10%;">
-        <h2 style="color: white;font-size: 40px;">3 Digit Game</h2>
-      </div>
-      <!-- <p id="result-status" style="margin-top: 5%; color: white; font-weight: bold;font-size: 20px;"></p> -->
 
+      <p id="result-status" class="ignore-on-screenshot"
+        style="margin-top: 5%; color: white; font-weight: bold;font-size: 20px;"></p>
+      <div class="game-type-cont">
+        <img width="45px" height="40px" style="margin-bottom: 4px;" src="assets/bigboss-logo.png" alt="">
+        <h2 class="game-type">3 Digit Game</h2>
+      </div>
+      <button class="ignore-on-screenshot" id="downloadBtn">Download</button>
     </div>
   </section>
 
   <footer class="fade-in">
-    <p>© 2025 Big Boss | All Rights Reserved</p>
+    <p>© 2023 Big Boss | All Rights Reserved</p>
   </footer>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      const userConfirmed = confirm('Do you want to save the image?');
+      if (userConfirmed) {
+        const container = document.getElementById('capture-container');
+        const ignoredElements = container.querySelectorAll('.ignore-on-screenshot');
+
+        // Hide elements that should not be captured
+        ignoredElements.forEach(el => {
+          el.style.visibility = 'hidden';
+        });
+
+        html2canvas(container, {
+          allowTaint: true,
+          useCORS: true,
+          scale: 3,
+          backgroundColor: null
+        }).then(canvas => {
+          // Create a new canvas with 720x720 size
+          const finalCanvas = document.createElement('canvas');
+          finalCanvas.width = 720;
+          finalCanvas.height = 720;
+          const ctx = finalCanvas.getContext('2d');
+
+          // Fill with transparent background (optional)
+          ctx.fillStyle = 'transparent';
+          ctx.fillRect(0, 0, 720, 720);
+
+          // Draw captured canvas onto final 720x720 canvas
+          ctx.drawImage(canvas, 0, 0, 720, 720);
+
+          // Download the final resized image
+          const link = document.createElement('a');
+          link.download = 'BigBoss_Result.png';
+          link.href = finalCanvas.toDataURL('image/png');
+          link.click();
+
+          // Restore hidden elements
+          ignoredElements.forEach(el => {
+            el.style.visibility = 'visible';
+          });
+        });
+      }
+    });
+  </script>
 
   <audio id="bg-music" autoplay loop>
     <source src="assets/music-for-page.mp3" type="audio/mpeg">
@@ -393,7 +559,6 @@
           }, { once: true });
         });
       };
-
       tryPlay();
     });
   </script>
@@ -403,18 +568,49 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDcmamLjhZh8x6wRAiDeEtuB_Mky2tCOkI",
-      authDomain: "lottery-e05d5.firebaseapp.com",
-      databaseURL: "https://lottery-e05d5-default-rtdb.firebaseio.com",
-      projectId: "lottery-e05d5",
-      storageBucket: "lottery-e05d5.appspot.com",
-      messagingSenderId: "357588305425",
-      appId: "1:357588305425:web:d1608265a0743fdda693b0",
-      measurementId: "G-GE938RN0DB"
+      apiKey: "AIzaSyBEuhWn0E9t0CXLqtl9JS0meW-UaIOJ69U",
+      authDomain: "bigboss-99c00.firebaseapp.com",
+      databaseURL: "https://bigboss-99c00-default-rtdb.firebaseio.com",
+      projectId: "bigboss-99c00",
+      storageBucket: "bigboss-99c00.firebasestorage.app",
+      messagingSenderId: "719397772316",
+      appId: "1:719397772316:web:e2f705022908af1866d3d9",
+      measurementId: "G-X7SGNWM2VS"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    let randomInterval1, randomInterval2, randomInterval3;
+    let isRunning = false;
+
+    const digit = document.getElementById('digit1');
+    const digit1 = document.getElementById('digit2');
+    const digit2 = document.getElementById('digit3');
+
+    function startRandomRun() {
+      if (isRunning) return;
+      isRunning = true;
+      randomInterval1 = setInterval(() => {
+        digit.textContent = Math.floor(Math.random() * 10);
+      }, 100);
+      randomInterval2 = setInterval(() => {
+        digit1.textContent = Math.floor(Math.random() * 10);
+      }, 102);
+      randomInterval3 = setInterval(() => {
+        digit2.textContent = Math.floor(Math.random() * 10);
+      }, 105);
+    }
+
+    function stopRandomRun(number) {
+      clearInterval(randomInterval1);
+      clearInterval(randomInterval2);
+      clearInterval(randomInterval3);
+      isRunning = false;
+      digit.textContent = number[0];
+      digit1.textContent = number[1];
+      digit2.textContent = number[2];
+    }
 
     function formatTime12hr(timeStr) {
       const [hour, minute] = timeStr.split(':');
@@ -433,16 +629,10 @@
       return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m ${secs}s`;
     }
 
-    function updateCard(number) {
-      document.getElementById('digit1').innerText = number[0];
-      document.getElementById('digit2').innerText = number[1];
-      document.getElementById('digit3').innerText = number[2];
-    }
-
     function fetchLatestDraw() {
       const today = new Date().toISOString().split('T')[0];
       const now = new Date();
-      const currentTime = now.toTimeString().slice(0, 5); // HH:MM
+      const currentTime = now.toTimeString().slice(0, 5);
 
       db.ref('results/' + today).once('value').then(snapshot => {
         const results = snapshot.val();
@@ -454,7 +644,7 @@
           drawTimeEl.innerText = '--:--';
           remainingEl.innerText = '--';
           status.innerText = "⏳ No draws available yet.";
-          updateCard('–––');
+          startRandomRun();
           return;
         }
 
@@ -470,23 +660,37 @@
           }
         }
 
-        if (currentDraw) {
-          updateCard(currentDraw.number);
-          drawTimeEl.innerText = formatTime12hr(currentDraw.time);
-          status.innerText = `✅ Result for ${formatTime12hr(currentDraw.time)} announced`;
-        } else {
-          updateCard('–––');
-          status.innerText = "⏳ Waiting for first result...";
-        }
+        const nowTime = now.getTime();
+        const nextDrawTime = nextDraw
+          ? new Date(`${today}T${nextDraw.time}:00`)
+          : null;
+
+        const fiveMinBeforeNext = nextDrawTime
+          ? new Date(nextDrawTime.getTime() - 5 * 60 * 1000)
+          : null;
 
         if (nextDraw) {
-          const nextTime = new Date(today + 'T' + nextDraw.time + ':00');
-          const timeDiff = nextTime - now;
+          // ✅ Always show upcoming draw time
           drawTimeEl.innerText = formatTime12hr(nextDraw.time);
-          remainingEl.innerText = formatCountdown(timeDiff);
-        } else if (!currentDraw) {
+          const diff = nextDrawTime - now;
+          remainingEl.innerText = formatCountdown(diff);
+        } else if (currentDraw) {
+          drawTimeEl.innerText = formatTime12hr(currentDraw.time);
+          remainingEl.innerText = "No more draws today";
+        } else {
           drawTimeEl.innerText = '--:--';
           remainingEl.innerText = '--';
+        }
+
+        // 🎯 Logic for showing actual result or random digits
+        if (currentDraw && (!nextDrawTime || now < fiveMinBeforeNext)) {
+          stopRandomRun(currentDraw.number);
+          status.innerText = `✅ Result for ${formatTime12hr(currentDraw.time)} announced`;
+        } else {
+          startRandomRun();
+          status.innerText = nextDraw
+            ? `🔁 Randomizing before ${formatTime12hr(nextDraw.time)} draw`
+            : "🔁 Waiting for next result...";
         }
       }).catch(err => {
         console.error(err);
@@ -499,6 +703,8 @@
       setInterval(fetchLatestDraw, 1000);
     });
   </script>
+
+
 </body>
 
 </html>
