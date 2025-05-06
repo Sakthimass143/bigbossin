@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,8 +62,7 @@
       background: #fff;
     }
 
-    th,
-    td {
+    th, td {
       padding: 8px;
       font-size: 13px;
       text-align: center;
@@ -122,8 +120,7 @@
         font-size: 11px;
       }
 
-      th,
-      td {
+      th, td {
         padding: 6px;
         font-size: 11px;
         border: 1px solid gray;
@@ -135,7 +132,6 @@
     }
   </style>
 </head>
-
 <body>
   <header class="slide-down">
     <h1>BIG BOSS</h1>
@@ -249,12 +245,13 @@
         <tbody>`;
 
       let i = 1;
-      for (const date of Object.keys(dateMap)) {
+      for (const date of range) {
         const [yyyy, mm, dd] = date.split("-");
         const formattedDate = `${dd}-${mm}-${yyyy}`;
         html += `<tr><td>${i++}</td><td>${formattedDate}</td>`;
         for (const show of showTimes) {
-          html += `<td>${dateMap[date][show.key] || '-'}</td>`;
+          const result = dateMap[date]?.[show.key];
+          html += `<td>${result || '-'}</td>`;
         }
         html += `</tr>`;
       }
@@ -264,13 +261,10 @@
     }
 
     window.onload = () => {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const max = yesterday.toISOString().split("T")[0];
-      document.getElementById("from-date").setAttribute("max", max);
-      document.getElementById("to-date").setAttribute("max", max);
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("from-date").setAttribute("max", today);
+      document.getElementById("to-date").setAttribute("max", today);
     };
   </script>
 </body>
-
 </html>
