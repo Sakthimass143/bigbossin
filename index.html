@@ -3,15 +3,15 @@
 
 <head>
   <!-- Google tag (gtag.js) -->
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VGFF9MD4M0"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGFF9MD4M0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-VGFF9MD4M0');
-</script>
+    gtag('config', 'G-VGFF9MD4M0');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Big Boss</title>
@@ -464,6 +464,7 @@
 
   <section class="main-section fade-in">
     <div id="capture-container" class="main-container">
+      <p id="current-date" style="color: white; font-weight: bold; font-size: 18px; margin-top: -15%; margin-bottom: 5%;"></p>
       <div class="logo-cont">
         <img width="50px" height="50px" src="assets/bigboss-logo.png" alt="">
         <h1>BIG BOSS</h1>
@@ -637,6 +638,14 @@
       return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m ${secs}s`;
     }
 
+    function displayCurrentDate() {
+      const dateEl = document.getElementById('current-date');
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      dateEl.innerText = now.toLocaleDateString('en-IN', options); // For Indian format
+    }
+
+
     function fetchLatestDraw() {
       const today = new Date().toISOString().split('T')[0];
       const now = new Date();
@@ -705,9 +714,12 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      displayCurrentDate();
       fetchLatestDraw();
       setInterval(fetchLatestDraw, 1000);
     });
+
+
   </script>
 </body>
 
