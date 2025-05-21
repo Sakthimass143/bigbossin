@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VGFF9MD4M0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-VGFF9MD4M0');
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Today Result - Big Boss</title>
@@ -19,16 +9,15 @@
   <style>
     body {
       font-family: 'Outfit', sans-serif;
-      /* background: linear-gradient(to bottom right, #d9f3ff, #ecfaff); */
       background-image: url('assets/today-result-bg.jpeg');
       background-repeat: no-repeat;
+      background-size: cover;
       color: #1a1a1a;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       overflow-x: hidden;
-      background-size: cover;
     }
 
     header {
@@ -54,6 +43,13 @@
       margin-bottom: 1rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       color: white;
+      text-align: center;
+    }
+
+    .draw.visible {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .draw-times {
@@ -78,11 +74,6 @@
       transition: all 0.3s ease;
     }
 
-    .draw h3 {
-      color: white;
-      font-size: 1.5rem;
-    }
-
     .draw-times button:hover {
       background: linear-gradient(135deg, #b0e2ff, #88c8ff);
     }
@@ -92,22 +83,6 @@
       color: white;
       transform: scale(1.05);
       box-shadow: 0 6px 20px rgba(0, 200, 255, 0.3);
-    }
-
-    .draw {
-      display: none;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .draw.visible {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .draw.visible {
-      display: block;
     }
 
     .prize {
@@ -137,10 +112,10 @@
 
   <section class="result-section fade-in">
     <h2 style="text-align:center;">🎯 Today's Results</h2>
+    <!-- <p id="resultDate" style="text-align:center; font-weight: 600; color: #333; margin-bottom: 1rem;"></p> -->
     <div id="drawResults"></div>
     <p id="status" style="text-align:center; color: gray;"></p>
     <div class="draw-times" id="drawTabs"></div>
-
   </section>
 
   <footer class="fade-in">
@@ -166,10 +141,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const showTimes = [
-      "10:00", "11:00", "12:00", "13:00",
-      "17:00", "18:00", "19:00", "20:00"
-    ];
+    const showTimes = ["10:00", "11:00", "12:00", "13:00", "17:00", "18:00", "19:00", "20:00"];
 
     function formatTime12hr(timeStr) {
       const [hour, minute] = timeStr.split(':');
@@ -179,6 +151,11 @@
       return `${hr12}:${minute} ${ampm}`;
     }
 
+    function formatDateReadable(dateObj) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return dateObj.toLocaleDateString('en-IN', options);
+    }
+
     function renderTodayResults() {
       const today = new Date().toISOString().split('T')[0];
       const now = new Date();
@@ -186,6 +163,7 @@
       const drawTabs = document.getElementById('drawTabs');
       const drawResults = document.getElementById('drawResults');
       const status = document.getElementById('status');
+      const todayFormatted = formatDateReadable(now);
 
       drawTabs.innerHTML = '';
       drawResults.innerHTML = '';
@@ -203,14 +181,12 @@
           const timeLabel = formatTime12hr(time);
           const tabId = "draw" + index;
 
-          // Tab Button
           const btn = document.createElement('button');
           btn.innerText = timeLabel;
           btn.onclick = () => showResult(tabId, btn);
           if (index === 0) btn.classList.add("active");
           drawTabs.appendChild(btn);
 
-          // Result Block
           const div = document.createElement('div');
           div.className = 'draw' + (index === 0 ? ' visible' : '');
           div.id = tabId;
@@ -218,6 +194,7 @@
           if (resultMap[time] && time <= currentTime) {
             const number = resultMap[time].number;
             div.innerHTML = `
+              <p style="margin-bottom: 0.5rem; color: #ccc;"><strong>${todayFormatted}</strong></p>
               <h3>Draw Time: <span style="color:gold;"> ${timeLabel}</span></h3>
               <p><strong>1st Prize (₹15,000):</strong> <span class="prize">${number}</span></p>
               <p><strong>2nd Prize (₹500):</strong> <span class="prize">${number.slice(-2)}</span></p>
@@ -225,6 +202,7 @@
             `;
           } else {
             div.innerHTML = `
+              <p style="margin-bottom: 0.5rem; color: #ccc;"><strong>${todayFormatted}</strong></p>
               <h3>Draw Time: ${timeLabel}</h3>
               <p class="not-available">🕒 Result not released yet.</p>
             `;
@@ -243,8 +221,10 @@
       document.getElementById(id).classList.add("visible");
     }
 
-    document.addEventListener('DOMContentLoaded', renderTodayResults);
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTodayResults();
+      document.getElementById('resultDate').innerText = formatDateReadable(new Date());
+    });
   </script>
 </body>
-
 </html>
