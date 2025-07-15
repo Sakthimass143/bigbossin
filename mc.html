@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Machine Draw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h2 {
+      text-align: center;
+      color: #ffcc00;
+      text-shadow: 0 0 10px #ffcc00;
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 10px;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .column {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      gap: 8px;
+    }
+
+    .card {
+      flex: 1;
+      background: #111;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #ffcc00, inset 0 0 8px #ffcc00;
+      padding: 10px;
+      text-align: center;
+      animation: glow 1.5s infinite alternate;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      min-height: 0;
+    }
+
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 10px #ffcc00, inset 0 0 5px #ffcc00;
+      }
+
+      to {
+        box-shadow: 0 0 25px #ffcc00, inset 0 0 15px #ffcc00;
+      }
+    }
+
+    .time {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #00ffea;
+      text-shadow: 0 0 5px #00fff2;
+    }
+
+    .number {
+      font-size: 1.2rem;
+      font-weight: bold;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .countdown {
+      font-size: 0.75rem;
+      color: #ccc;
+      height: 20px;
+      overflow: hidden;
+    }
+
+    .waiting {
+      color: #ff5555;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      h2 {
+        font-size: 1rem;
+      }
+
+      .number {
+        font-size: 1rem;
+      }
+
+      .countdown {
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <h2>🎰 BIGBOSS MACHINE NUMBER 🎰</h2>
+  <div class="row">
+    <div class="column" id="left"></div>
+    <div class="column" id="right"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <!-- <script>
+    const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00', '20:00'];
+    const leftDiv = document.getElementById("left");
+    const rightDiv = document.getElementById("right");
+
+    function format12(time24) {
+      const [hour, minute] = time24.split(":");
+      const h = parseInt(hour);
+      const period = h >= 12 ? "PM" : "AM";
+      const hour12 = ((h + 11) % 12 + 1);
+      return `${hour12}:${minute} ${period}`;
+    }
+
+    function render(data = {}) {
+      leftDiv.innerHTML = '';
+      rightDiv.innerHTML = '';
+
+      const now = new Date();
+      const today = now.toISOString().split("T")[0];
+
+      times.forEach((time, index) => {
+        const [h, m] = time.split(":");
+        const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
+        const isPastOrNow = now >= slotTime;
+        const isFuture = now < slotTime;
+        const hasResult = data[time] && data[time].trim() !== '';
+
+        let displayText = '';
+        let displayClass = '';
+
+        if (isPastOrNow && hasResult) {
+          // ✅ Time reached AND result uploaded → show number
+          displayText = `<span style="color:#00ff00; text-shadow:0 0 10px #00ff00">${data[time]}</span>`;
+          displayClass = '';
+        } else if (isPastOrNow && !hasResult) {
+          // ❌ Time reached AND no result → Not Released
+          displayText = 'Not Released';
+          displayClass = 'waiting';
+        } else {
+          // ⏳ Future time → always Waiting...
+          displayText = 'Waiting...';
+          displayClass = 'waiting';
+        }
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+        <div class="time">${format12(time)}</div>
+        <div class="number ${displayClass}" id="num_${time}">${displayText}</div>
+        <div class="countdown" id="cd_${time}"></div>
+      `;
+
+        if (index < 4) leftDiv.appendChild(card);
+        else rightDiv.appendChild(card);
+      });
+    }
+
+    function loadData() {
+      const today = new Date().toISOString().split("T")[0];
+      db.ref("machineData/" + today).get().then(snapshot => {
+        const data = snapshot.val() || {};
+        render(data);
+      });
+    }
+
+    loadData();
+    setInterval(loadData, 1000); // refresh every second
+  </script> -->
+  <script>
+    const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00', '20:00'];
+    const leftDiv = document.getElementById("left");
+    const rightDiv = document.getElementById("right");
+
+    function format12(time24) {
+      const [hour, minute] = time24.split(":");
+      const h = parseInt(hour);
+      const period = h >= 12 ? "PM" : "AM";
+      const hour12 = ((h + 11) % 12 + 1);
+      return `${hour12}:${minute} ${period}`;
+    }
+
+    function render(data = {}) {
+      leftDiv.innerHTML = '';
+      rightDiv.innerHTML = '';
+
+      const now = new Date();
+      const today = now.toISOString().split("T")[0];
+
+      // Find the next upcoming time slot
+      let nextUpcomingTime = times.find(t => {
+        const [h, m] = t.split(":");
+        const slot = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
+        return slot > now;
+      });
+
+      times.forEach((time, index) => {
+        const [h, m] = time.split(":");
+        const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
+        const isPastOrNow = now >= slotTime;
+        const isFuture = now < slotTime;
+        const hasResult = data[time] && data[time].trim() !== '';
+
+        let displayText = '';
+        let displayClass = '';
+
+        if (isPastOrNow && hasResult) {
+          // ✅ Time passed and result uploaded
+          displayText = `<span style="color:#00ff00; text-shadow:0 0 10px #00ff00">${data[time]}</span>`;
+          displayClass = '';
+        } else if (isPastOrNow && !hasResult) {
+          // ❌ Time passed and result not uploaded
+          displayText = 'Not Released';
+          displayClass = 'waiting';
+        } else if (isFuture && time === nextUpcomingTime) {
+          // ⏳ Only next upcoming slot shows countdown
+          const diff = slotTime - now;
+          const minsLeft = Math.floor(diff / 1000 / 60);
+          displayText = `Waiting... (${minsLeft} min left)`;
+          displayClass = 'waiting';
+        } else {
+          // ⏳ Future time (not the next one)
+          displayText = 'Waiting...';
+          displayClass = 'waiting';
+        }
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+        <div class="time">${format12(time)}</div>
+        <div class="number ${displayClass}" id="num_${time}">${displayText}</div>
+        <div class="countdown" id="cd_${time}"></div>
+      `;
+
+        if (index < 4) leftDiv.appendChild(card);
+        else rightDiv.appendChild(card);
+      });
+    }
+
+    function loadData() {
+      const today = new Date().toISOString().split("T")[0];
+      db.ref("machineData/" + today).get().then(snapshot => {
+        const data = snapshot.val() || {};
+        render(data);
+      });
+    }
+
+    loadData();
+    setInterval(loadData, 100); // Refresh every second
+  </script>
+
+
+</body>
+
+</html>
