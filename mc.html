@@ -1,297 +1,230 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Machine Draw</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>BIGBOSS - MC Draw</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
+      margin: 0;
+      padding: 0;
       background: #000;
+      font-family: 'Arial Black', sans-serif;
       color: #fff;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      overflow: hidden;
       display: flex;
-      flex-direction: column;
       justify-content: center;
-    }
-
-    h2 {
-      text-align: center;
-      color: #ffcc00;
-      text-shadow: 0 0 10px #ffcc00;
-      margin-bottom: 10px;
-      font-size: 1.4rem;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      padding: 0 10px;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .column {
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      gap: 8px;
-    }
-
-    .card {
-      flex: 1;
-      background: #111;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #ffcc00, inset 0 0 8px #ffcc00;
-      padding: 10px;
-      text-align: center;
-      animation: glow 1.5s infinite alternate;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      min-height: 0;
-    }
-
-    @keyframes glow {
-      from {
-        box-shadow: 0 0 10px #ffcc00, inset 0 0 5px #ffcc00;
-      }
-
-      to {
-        box-shadow: 0 0 25px #ffcc00, inset 0 0 15px #ffcc00;
-      }
-    }
-
-    .time {
-      font-size: 0.95rem;
-      font-weight: bold;
-      color: #00ffea;
-      text-shadow: 0 0 5px #00fff2;
-    }
-
-    .number {
-      font-size: 1.2rem;
-      font-weight: bold;
-      height: 30px;
-      display: flex;
       align-items: center;
+      height: 100vh;
+    }
+
+    .lottery-card {
+      width: 400px;
+      background: radial-gradient(circle at center, gold, #ffbf00);
+      /* border-radius: 25px; */
+      box-shadow: 0 0 30px gold, 0 0 20px #ff0 inset;
+      padding: 30px 20px;
+      text-align: center;
+      border: 5px solid #fff;
+    }
+
+    .title {
+      font-size: 36px;
+      color: #000;
+      font-weight: bold;
+      text-shadow: 2px 2px 2px #fff, -2px -2px 0 #fff;
+      border: 3px solid #000;
+      padding: 10px;
+      background: #ffe100;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .stripes {
+      height: 10px;
+      background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        #00f6ff 10px,
+        #00f6ff 20px
+      );
+      margin-bottom: 20px;
+    }
+
+    .draw-time {
+      font-size: 28px;
+      background: #000;
+      color: #0ff;
+      border: 3px solid #0ff;
+      padding: 8px 15px;
+      border-radius: 12px;
+      margin: 10px auto;
+      display: inline-block;
+      font-weight: bold;
+      box-shadow: 0 0 8px #0ff;
+    }
+
+    .date, .tamil-day {
+      font-size: 22px;
+      color: #fff;
+      font-weight: bold;
+      border: 2px solid #fff;
+      padding: 5px 10px;
+      margin: 10px auto;
+      display: inline-block;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      text-shadow: 1px 1px #000;
+    }
+
+    .number-boxes {
+      display: flex;
       justify-content: center;
+      gap: 10px;
+      margin: 25px auto;
     }
 
-    .countdown {
-      font-size: 0.75rem;
-      color: #ccc;
-      height: 20px;
-      overflow: hidden;
+    .digit-box {
+      background: #fff8dc;
+      color: #000;
+      font-size: 46px;
+      font-weight: bold;
+      width: 55px;
+      height: 65px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 4px solid #000;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #000 inset;
     }
 
-    .waiting {
-      color: #ff5555;
-      animation: blink 1s infinite;
+    .footer-glow {
+      width: 80%;
+      height: 8px;
+      margin: 30px auto 0;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #00f6ff, #fff200, #00f6ff);
+      box-shadow: 0 0 15px #ff0, 0 0 25px #00f6ff;
+      animation: pulseGlow 2s infinite alternate;
     }
 
-    @keyframes blink {
-
-      0%,
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 10px #ff0, 0 0 20px #00f6ff;
+      }
       100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.3;
-      }
-    }
-
-    @media screen and (max-width: 600px) {
-      h2 {
-        font-size: 1rem;
-      }
-
-      .number {
-        font-size: 1rem;
-      }
-
-      .countdown {
-        font-size: 0.7rem;
+        box-shadow: 0 0 25px #fff200, 0 0 40px #00f6ff;
       }
     }
   </style>
-
 </head>
-
 <body>
 
-  <h2>🎰 BIGBOSS MACHINE NUMBER 🎰</h2>
-  <div class="row">
-    <div class="column" id="left"></div>
-    <div class="column" id="right"></div>
+<div class="lottery-card">
+  <div class="title">BIGBOSS - MC</div>
+  <div class="stripes"></div>
+  <div class="draw-time" id="drawTime">--:--</div>
+  <div class="date" id="drawDate">--</div>
+  <div class="tamil-day" id="drawDay">--</div>
+  <div class="number-boxes" id="numberBoxes">
+    <div class="digit-box">-</div>
+    <div class="digit-box">-</div>
+    <div class="digit-box">-</div>
+    <div class="digit-box">-</div>
+    <div class="digit-box">-</div>
   </div>
+  <div class="footer-glow"></div>
+</div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <!-- <script>
-    const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00', '20:00'];
-    const leftDiv = document.getElementById("left");
-    const rightDiv = document.getElementById("right");
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
 
-    function format12(time24) {
-      const [hour, minute] = time24.split(":");
-      const h = parseInt(hour);
-      const period = h >= 12 ? "PM" : "AM";
-      const hour12 = ((h + 11) % 12 + 1);
-      return `${hour12}:${minute} ${period}`;
-    }
+<script>
+  const times = ['10:00','11:00','12:00','13:00','17:00','18:00','19:00','20:00'];
+  const tamilDays = ['ஞாயிறு','திங்கள்','செவ்வாய்','புதன்','வியாழன்','வெள்ளி','சனி'];
 
-    function render(data = {}) {
-      leftDiv.innerHTML = '';
-      rightDiv.innerHTML = '';
+  const drawTimeEl = document.getElementById("drawTime");
+  const drawDateEl = document.getElementById("drawDate");
+  const drawDayEl = document.getElementById("drawDay");
+  const numberBoxes = document.getElementById("numberBoxes");
 
-      const now = new Date();
-      const today = now.toISOString().split("T")[0];
+  function formatTo12(time24) {
+    const [hour, minute] = time24.split(":");
+    const h = parseInt(hour);
+    const period = h >= 12 ? "PM" : "AM";
+    const hour12 = ((h + 11) % 12 + 1);
+    return `BB-${hour12.toString().padStart(2, '0')}:${minute} ${period}`;
+  }
 
-      times.forEach((time, index) => {
-        const [h, m] = time.split(":");
+  function getTodayKey() {
+    return new Date().toISOString().split("T")[0];
+  }
+
+  function getTodayDisplay() {
+    return new Date().toLocaleDateString('en-GB');
+  }
+
+  function getTamilDay() {
+    return tamilDays[new Date().getDay()];
+  }
+
+  function loadCard() {
+    const now = new Date();
+    const todayKey = getTodayKey();
+
+    db.ref("machineData/" + todayKey).get().then(snapshot => {
+      const data = snapshot.val() || {};
+      let displaySlot = null;
+
+      for (let i = 0; i < times.length; i++) {
+        const [h, m] = times[i].split(":");
         const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
-        const isPastOrNow = now >= slotTime;
-        const isFuture = now < slotTime;
-        const hasResult = data[time] && data[time].trim() !== '';
+        const oneHourBefore = new Date(slotTime.getTime() - 60 * 60 * 1000);
 
-        let displayText = '';
-        let displayClass = '';
-
-        if (isPastOrNow && hasResult) {
-          // ✅ Time reached AND result uploaded → show number
-          displayText = `<span style="color:#00ff00; text-shadow:0 0 10px #00ff00">${data[time]}</span>`;
-          displayClass = '';
-        } else if (isPastOrNow && !hasResult) {
-          // ❌ Time reached AND no result → Not Released
-          displayText = 'Not Released';
-          displayClass = 'waiting';
-        } else {
-          // ⏳ Future time → always Waiting...
-          displayText = 'Waiting...';
-          displayClass = 'waiting';
+        if (now >= oneHourBefore && now < slotTime) {
+          displaySlot = times[i];
+          break;
         }
 
-        const card = document.createElement("div");
-        card.classList.add("card");
-
-        card.innerHTML = `
-        <div class="time">${format12(time)}</div>
-        <div class="number ${displayClass}" id="num_${time}">${displayText}</div>
-        <div class="countdown" id="cd_${time}"></div>
-      `;
-
-        if (index < 4) leftDiv.appendChild(card);
-        else rightDiv.appendChild(card);
-      });
-    }
-
-    function loadData() {
-      const today = new Date().toISOString().split("T")[0];
-      db.ref("machineData/" + today).get().then(snapshot => {
-        const data = snapshot.val() || {};
-        render(data);
-      });
-    }
-
-    loadData();
-    setInterval(loadData, 1000); // refresh every second
-  </script> -->
-  <script>
-    const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00', '20:00'];
-    const leftDiv = document.getElementById("left");
-    const rightDiv = document.getElementById("right");
-
-    function format12(time24) {
-      const [hour, minute] = time24.split(":");
-      const h = parseInt(hour);
-      const period = h >= 12 ? "PM" : "AM";
-      const hour12 = ((h + 11) % 12 + 1);
-      return `${hour12}:${minute} ${period}`;
-    }
-
-    function render(data = {}) {
-      leftDiv.innerHTML = '';
-      rightDiv.innerHTML = '';
-
-      const now = new Date();
-      const today = now.toISOString().split("T")[0];
-
-      // Find the next upcoming time slot
-      let nextUpcomingTime = times.find(t => {
-        const [h, m] = t.split(":");
-        const slot = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
-        return slot > now;
-      });
-
-      times.forEach((time, index) => {
-        const [h, m] = time.split(":");
-        const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
-        const isPastOrNow = now >= slotTime;
-        const isFuture = now < slotTime;
-        const hasResult = data[time] && data[time].trim() !== '';
-
-        let displayText = '';
-        let displayClass = '';
-
-        if (isPastOrNow && hasResult) {
-          // ✅ Time passed and result uploaded
-          displayText = `<span style="color:#00ff00; text-shadow:0 0 10px #00ff00">${data[time]}</span>`;
-          displayClass = '';
-        } else if (isPastOrNow && !hasResult) {
-          // ❌ Time passed and result not uploaded
-          displayText = 'Not Released';
-          displayClass = 'waiting';
-        } else if (isFuture && time === nextUpcomingTime) {
-          // ⏳ Only next upcoming slot shows countdown
-          const diff = slotTime - now;
-          const minsLeft = Math.floor(diff / 1000 / 60);
-          displayText = `Waiting... (${minsLeft} min left)`;
-          displayClass = 'waiting';
-        } else {
-          // ⏳ Future time (not the next one)
-          displayText = 'Waiting...';
-          displayClass = 'waiting';
+        if (now >= slotTime) {
+          displaySlot = times[i];
         }
+      }
 
-        const card = document.createElement("div");
-        card.classList.add("card");
+      drawDateEl.innerText = getTodayDisplay();
+      drawDayEl.innerText = getTamilDay();
 
-        card.innerHTML = `
-        <div class="time">${format12(time)}</div>
-        <div class="number ${displayClass}" id="num_${time}">${displayText}</div>
-        <div class="countdown" id="cd_${time}"></div>
-      `;
+      if (displaySlot) {
+        drawTimeEl.innerText = formatTo12(displaySlot);
+        const number = data[displaySlot] && data[displaySlot].trim() !== '' ? data[displaySlot] : '-----';
+        updateDigits(number);
+      } else {
+        drawTimeEl.innerText = '--:--';
+        updateDigits('-----');
+      }
+    }).catch(err => {
+      console.error("Firebase error:", err);
+      updateDigits('-----');
+    });
+  }
 
-        if (index < 4) leftDiv.appendChild(card);
-        else rightDiv.appendChild(card);
-      });
-    }
+  function updateDigits(number) {
+    const digits = number.padEnd(5, '-').split('');
+    const boxes = numberBoxes.querySelectorAll('.digit-box');
+    boxes.forEach((box, i) => box.innerText = digits[i] || '-');
+  }
 
-    function loadData() {
-      const today = new Date().toISOString().split("T")[0];
-      db.ref("machineData/" + today).get().then(snapshot => {
-        const data = snapshot.val() || {};
-        render(data);
-      });
-    }
-
-    loadData();
-    setInterval(loadData, 100); // Refresh every second
-  </script>
-
+  loadCard();
+  setInterval(loadCard, 10000);
+</script>
 
 </body>
-
 </html>

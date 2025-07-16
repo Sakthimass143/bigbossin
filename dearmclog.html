@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background: #111;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px #ffcc00, inset 0 0 10px #ffcc00;
+      animation: pulse 2s infinite alternate;
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    @keyframes pulse {
+      from {
+        box-shadow: 0 0 10px #ffcc00, inset 0 0 5px #ffcc00;
+      }
+
+      to {
+        box-shadow: 0 0 25px #ffcc00, inset 0 0 15px #ffcc00;
+      }
+    }
+
+    .login-box h2 {
+      color: #00ffea;
+      text-shadow: 0 0 10px #00fff2;
+      margin-bottom: 30px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      background: #222;
+      color: #fff;
+      box-shadow: 0 0 8px #00ffea;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #00ff00;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #00ff00;
+      transition: 0.3s;
+    }
+
+    .login-btn:hover {
+      background: #0f0;
+      box-shadow: 0 0 25px #00ff00;
+    }
+
+    .error-msg {
+      color: #ff4444;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <input type="email" id="email" class="input-field" placeholder="Email">
+    <input type="password" id="password" class="input-field" placeholder="Password">
+    <button class="login-btn" onclick="login()">Login</button>
+    <div id="error" class="error-msg"></div>
+  </div>
+
+  <!-- Firebase (compat version) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <!-- Login script -->
+<script>
+  function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const errorBox = document.getElementById("error");
+
+    if (!email || !password) {
+      errorBox.innerText = "Please enter email and password.";
+      return;
+    }
+
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        window.location.href = "mcadmin.html";
+      })
+      .catch(err => {
+        errorBox.innerText = "Invalid credentials. Try again.";
+      });
+  }
+</script>
+
+</body>
+
+</html>
