@@ -27,7 +27,7 @@
 
     .lottery-card {
       width: 400px;
-      background: radial-gradient(circle at center, #ffe100, #ffe100);
+      background: radial-gradient(circle at center, gold, #ffe100);
       box-shadow: 0 0 30px gold, 0 0 20px #ff0 inset;
       padding: 30px 20px;
       text-align: center;
@@ -47,26 +47,24 @@
     }
 
     .stripes {
-      height: 10px;
-      background: repeating-linear-gradient(45deg,
-          #000,
-          #000 10px,
-          #00f6ff 10px,
-          #00f6ff 20px);
-      margin-bottom: 20px;
+      display: block;
+      margin: 0 auto 20px auto;
+      max-width: 100%;
+      overflow: hidden;
+      border: none;
     }
 
     .draw-time {
       font-size: 28px;
       background: #000;
-      color: #0ff;
-      border: 3px solid #0ff;
+      color: #ffae00;
+      border: 3px solid #ffae00;
       padding: 8px 15px;
       border-radius: 12px;
       margin: 10px auto;
       display: inline-block;
       font-weight: bold;
-      box-shadow: 0 0 8px #0ff;
+      box-shadow: 0 0 8px #f1b83a;
     }
 
     .date,
@@ -88,7 +86,6 @@
       gap: 10px;
       margin: 25px auto;
       flex-wrap: nowrap;
-      /* Prevent wrap on small screens */
     }
 
     .digit-box {
@@ -126,11 +123,9 @@
       }
     }
 
-    /* === Lock same desktop style on mobile === */
     @media (max-width: 480px) {
       .lottery-card {
         width: 400px;
-        /* Force same size as desktop */
         padding: 30px 20px;
       }
 
@@ -140,28 +135,32 @@
 
       body {
         overflow-x: auto;
-        /* Allow horizontal scroll if needed */
+      }
+
+      #capture-wrapper {
+        display: inline-block;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <div class="lottery-card">
-    <div class="title">BIGBOSS - MC</div>
-    <div class="stripes"></div>
-    <div class="draw-time" id="drawTime">--:--</div>
-    <div class="date" id="drawDate">--</div>
-    <div class="tamil-day" id="drawDay">--</div>
-    <div class="number-boxes" id="numberBoxes">
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
+  <div id="capture-wrapper">
+    <div class="lottery-card">
+      <div class="title">BIGBOSS - MC</div>
+      <canvas class="stripes" id="stripeCanvas" width="400" height="10"></canvas>
+      <div class="draw-time" id="drawTime">--:--</div>
+      <div class="date" id="drawDate">--</div>
+      <div class="tamil-day" id="drawDay">--</div>
+      <div class="number-boxes" id="numberBoxes">
+        <div class="digit-box">-</div>
+        <div class="digit-box">-</div>
+        <div class="digit-box">-</div>
+        <div class="digit-box">-</div>
+        <div class="digit-box">-</div>
+      </div>
+      <div class="footer-glow"></div>
     </div>
-    <div class="footer-glow"></div>
   </div>
 
   <!-- Firebase -->
@@ -216,7 +215,6 @@
             displaySlot = times[i];
             break;
           }
-
           if (now >= slotTime) {
             displaySlot = times[i];
           }
@@ -247,8 +245,95 @@
 
     loadCard();
     setInterval(loadCard, 10000);
+
+    function drawStripes(canvas = document.getElementById("stripeCanvas")) {
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const stripeWidth = 20;
+      const height = canvas.height;
+
+      ctx.clearRect(0, 0, canvas.width, height);
+      for (let x = -canvas.width; x < canvas.width * 2; x += stripeWidth) {
+        ctx.fillStyle = (x / stripeWidth) % 2 === 0 ? "#000" : "#00f6ff";
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + stripeWidth, 0);
+        ctx.lineTo(x + stripeWidth - 10, height);
+        ctx.lineTo(x - 10, height);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    drawStripes();
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    let lastTap = 0;
+    document.querySelector(".lottery-card").addEventListener("click", function (e) {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      if (tapLength < 400 && tapLength > 0) {
+        captureCardAsImage();
+      }
+      lastTap = currentTime;
+    });
+
+    function captureCardAsImage() {
+      const original = document.querySelector(".lottery-card");
+      const clone = original.cloneNode(true);
+
+      // Draw stripes on the cloned canvas
+      const cloneStripeCanvas = clone.querySelector("#stripeCanvas");
+      drawStripes(cloneStripeCanvas);
+
+      clone.style.transform = "scale(2.5)";
+      clone.style.transformOrigin = "top left";
+      clone.style.margin = "100px";
+      clone.style.boxSizing = "border-box";
+
+      const container = document.createElement("div");
+      container.style.position = "absolute";
+      container.style.top = "-9999px";
+      container.style.left = "-9999px";
+      container.style.overflow = "visible";
+      container.style.background = "#000";
+      container.appendChild(clone);
+      document.body.appendChild(container);
+
+      setTimeout(() => {
+        html2canvas(clone, {
+          backgroundColor: null,
+          useCORS: true,
+          allowTaint: true,
+          scale: 3
+        }).then(canvas => {
+          document.body.removeChild(container);
+          const finalCanvas = document.createElement('canvas');
+          finalCanvas.width = 1600;
+          finalCanvas.height = 1600;
+          const ctx = finalCanvas.getContext('2d');
+          ctx.drawImage(canvas, 0, 0, finalCanvas.width, finalCanvas.height);
+
+          const link = document.createElement("a");
+          link.download = `BIGBOSS-MC-${new Date().toISOString().split("T")[0]}.png`;
+          link.href = finalCanvas.toDataURL("image/png");
+          link.click();
+        }).catch(err => {
+          console.error("Image capture failed:", err);
+          document.body.removeChild(container);
+        });
+      }, 300);
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "s" && e.ctrlKey) {
+        e.preventDefault();
+        captureCardAsImage();
+      }
+    });
+  </script>
 </body>
 
 </html>
