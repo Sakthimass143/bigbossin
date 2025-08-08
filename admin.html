@@ -107,8 +107,26 @@
         width: 90%;
         margin-left: 5%;
       }
-      .show-card{
+
+      .show-card {
         width: 80% !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .form-container {
+        width: 90%;
+        margin-left: 5%;
+      }
+
+      .show-card {
+        width: 80% !important;
+      }
+
+      .shows-grid #shows-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        gap: 5px;
       }
     }
 
