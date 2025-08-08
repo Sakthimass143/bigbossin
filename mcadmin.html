@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -54,8 +55,13 @@
     }
 
     @keyframes glow {
-      from { box-shadow: 0 0 10px #ffcc00, inset 0 0 5px #ffcc00; }
-      to { box-shadow: 0 0 25px #ffcc00, inset 0 0 15px #ffcc00; }
+      from {
+        box-shadow: 0 0 10px #ffcc00, inset 0 0 5px #ffcc00;
+      }
+
+      to {
+        box-shadow: 0 0 25px #ffcc00, inset 0 0 15px #ffcc00;
+      }
     }
 
     .label {
@@ -103,6 +109,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <h2>🛠️ Admin Panel – Machine Number Entry</h2>
@@ -123,64 +130,81 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <script src="firebase-config.js"></script>
 
- <script>
-  const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00','20:00'];
-  const leftDiv = document.getElementById("left");
-  const rightDiv = document.getElementById("right");
+  <script>
+    const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00', '20:00'];
+    const leftDiv = document.getElementById("left");
+    const rightDiv = document.getElementById("right");
 
-  document.getElementById("date").min = new Date().toISOString().split("T")[0];
+    document.getElementById("date").min = new Date().toISOString().split("T")[0];
 
-  function formatTo12Hour(time24) {
-    const [hour, minute] = time24.split(":");
-    const h = parseInt(hour);
-    const ampm = h >= 12 ? "PM" : "AM";
-    const h12 = ((h + 11) % 12 + 1);
-    return `${h12}:${minute} ${ampm}`;
-  }
-
-  function renderInputs() {
-    leftDiv.innerHTML = '';
-    rightDiv.innerHTML = '';
-
-    times.forEach((time, index) => {
-      const card = document.createElement("div");
-      card.classList.add("card");
-
-      const label = `<div class="label">${formatTo12Hour(time)} Slot</div>`;
-      const input = `<input class="input-field" type="text" id="t_${time}" placeholder="Enter Machine Number">`;
-
-      card.innerHTML = label + input;
-
-      if (index < 4) leftDiv.appendChild(card);
-      else rightDiv.appendChild(card);
-    });
-  }
-
-  renderInputs();
-
-  function submitData() {
-    const date = document.getElementById("date").value;
-    if (!date) return alert("Please select a date");
-
-    const data = {};
-    let emptyFound = false;
-
-    times.forEach(time => {
-      const val = document.getElementById("t_" + time).value.trim();
-      if (!val) emptyFound = true;
-      data[time] = val;
-    });
-
-    if (emptyFound) {
-      const confirmContinue = confirm("Some time slots are empty. Do you want to continue?");
-      if (!confirmContinue) return;
+    function formatTo12Hour(time24) {
+      const [hour, minute] = time24.split(":");
+      const h = parseInt(hour);
+      const ampm = h >= 12 ? "PM" : "AM";
+      const h12 = ((h + 11) % 12 + 1);
+      return `${h12}:${minute} ${ampm}`;
     }
 
-    db.ref("machineData/" + date).set(data)
-      .then(() => alert("✅ Machine numbers submitted successfully"))
-      .catch(err => alert("❌ Upload failed: " + err.message));
-  }
-</script>
+    function renderInputs() {
+      leftDiv.innerHTML = '';
+      rightDiv.innerHTML = '';
+
+      times.forEach((time, index) => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        const label = `<div class="label">${formatTo12Hour(time)} Slot</div>`;
+        const input = `<input 
+                      class="input-field" 
+                      type="text" 
+                      id="t_${time}" 
+                      placeholder="Enter 5-digit Machine Number"
+                      maxlength="5"
+                      oninput="this.value = this.value.replace(/[^0-9]/g,'')">`;
+
+        card.innerHTML = label + input;
+
+        if (index < 4) leftDiv.appendChild(card);
+        else rightDiv.appendChild(card);
+      });
+    }
+
+    renderInputs();
+
+    function submitData() {
+      const date = document.getElementById("date").value;
+      if (!date) return alert("Please select a date");
+
+      const data = {};
+      let invalidFound = false;
+
+      times.forEach(time => {
+        const val = document.getElementById("t_" + time).value.trim();
+
+        if (val && (!/^\d{5}$/.test(val))) {
+          invalidFound = true;
+        }
+
+        data[time] = val;
+      });
+
+      if (invalidFound) {
+        return alert("❌ Each machine number must be exactly 5 digits.");
+      }
+
+      const emptyFound = times.some(time => !document.getElementById("t_" + time).value.trim());
+      if (emptyFound) {
+        const confirmContinue = confirm("Some time slots are empty. Do you want to continue?");
+        if (!confirmContinue) return;
+      }
+
+      db.ref("machineData/" + date).set(data)
+        .then(() => alert("✅ Machine numbers submitted successfully"))
+        .catch(err => alert("❌ Upload failed: " + err.message));
+    }
+  </script>
+
 
 </body>
+
 </html>
