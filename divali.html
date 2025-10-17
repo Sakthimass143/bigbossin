@@ -17,6 +17,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
   <style>
     html,
     body {
@@ -476,6 +478,21 @@
   </header>
 
   <section class="main-section fade-in">
+    <!-- Diwali Overlay -->
+    <div id="diwali-overlay" aria-hidden="true" style="
+  position:fixed; inset:0; display:grid; place-items:center;
+  background: radial-gradient(1200px 800px at 50% 40%, rgba(0,0,0,.25), rgba(0,0,0,.75));
+  opacity:0; pointer-events:none; transition:opacity .4s ease; z-index:99999;">
+      <div style="
+    background:rgba(0,0,0,.6); border:2px solid gold; border-radius:20px;
+    padding:28px 34px; text-align:center; color:#ffd700;
+    box-shadow:0 0 40px rgba(255,215,0,.35); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);">
+        <div style="font-size:54px; filter:drop-shadow(0 0 12px rgba(255,185,0,.6));">🪔</div>
+        <h2 style="margin:6px 0 2px; font-size:2rem; letter-spacing:1px;">Happy Diwali!</h2>
+        <p style="color:#fff; opacity:.9; margin:6px 0 0;">Wishing you joy, light, and prosperity</p>
+      </div>
+    </div>
+
     <!-- <a href="https://whatsapp.com/channel/0029Vb5X8ad8KMqfOCcgRR0J" target="_blank">
       <img class="whatsapp-img" src="assets/whatsapp.png" alt="">
     </a> -->
@@ -738,6 +755,50 @@
 
 
   </script>
+  <script>
+    // IST date check (works regardless of user’s local timezone)
+    function isISTDate(y, m, d) {
+      const nowIST = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+      return nowIST.getFullYear() === y && (nowIST.getMonth() + 1) === m && nowIST.getDate() === d;
+    }
+
+    function celebrateDiwali(durationSec = 5) {
+      const overlay = document.getElementById('diwali-overlay');
+      if (!overlay || !window.confetti) return;
+
+      // show overlay
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+
+      const end = Date.now() + durationSec * 1000;
+
+      (function burst() {
+        // side bursts
+        confetti({ particleCount: 10, angle: 60, spread: 70, origin: { x: 0, y: 0.6 } });
+        confetti({ particleCount: 10, angle: 120, spread: 70, origin: { x: 1, y: 0.6 } });
+        // center sparkle
+        confetti({
+          particleCount: 6, startVelocity: 35, spread: 360, ticks: 120, scalar: 0.9,
+          origin: { x: Math.random(), y: Math.random() * 0.4 + 0.1 }
+        });
+
+        if (Date.now() < end) requestAnimationFrame(burst);
+        else {
+          // hide overlay after celebration
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+        }
+      })();
+    }
+
+    // Auto-run only on 20 Oct 2025 (IST), show for 5 seconds
+    document.addEventListener('DOMContentLoaded', function () {
+      if (isISTDate(2025, 10, 17)) {
+        celebrateDiwali(5);
+      }
+    });
+  </script>
+
 </body>
 
 </html>
