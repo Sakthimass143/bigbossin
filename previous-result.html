@@ -11,11 +11,14 @@
 
     gtag('config', 'G-VGFF9MD4M0');
   </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Previous Results - Big Boss</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
   <style>
     body {
       font-family: 'Outfit', sans-serif;
@@ -60,6 +63,7 @@
       width: 100%;
       display: flex;
       justify-content: center;
+      overflow-x: auto;
     }
 
     table {
@@ -95,7 +99,6 @@
 
     tr:hover td {
       background-color: #f0e7fa;
-      cursor: default;
       transition: background 0.2s ease;
     }
 
@@ -146,6 +149,7 @@
 </head>
 
 <body>
+
   <header class="slide-down">
     <h1>BIG BOSS</h1>
     <nav class="fade-in">
@@ -158,11 +162,14 @@
 
   <section class="result-section fade-in">
     <h2 style="text-align:center;">📅 Previous Results</h2>
+
     <div class="input-section">
       <label for="from-date">From:</label>
       <input type="date" id="from-date">
+
       <label for="to-date">To:</label>
       <input type="date" id="to-date">
+
       <button onclick="fetchResults()">View Results</button>
     </div>
 
@@ -204,38 +211,74 @@
     ];
 
     function getDateRange(startDate, endDate) {
-      const dateArray = [];
-      let currentDate = new Date(startDate);
-      const stopDate = new Date(endDate);
-      while (currentDate <= stopDate) {
-        dateArray.push(currentDate.toISOString().split('T')[0]);
-        currentDate.setDate(currentDate.getDate() + 1);
+      const dates = [];
+      let current = new Date(startDate);
+      let last = new Date(endDate);
+
+      while (current <= last) {
+        const y = current.getFullYear();
+        const m = String(current.getMonth() + 1).padStart(2, '0');
+        const d = String(current.getDate()).padStart(2, '0');
+
+        dates.push(`${y}-${m}-${d}`);
+        current.setDate(current.getDate() + 1);
       }
-      return dateArray;
+
+      return dates;
+    }
+
+    function getCurrentTimeKey() {
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const currentMinutes = hour * 60 + minute;
+
+      let lastAvailable = null;
+
+      for (const show of showTimes) {
+        const parts = show.key.split(":");
+        const showMinutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+        if (currentMinutes >= showMinutes) {
+          lastAvailable = show.key;
+        }
+      }
+
+      return lastAvailable;
     }
 
     async function fetchResults() {
-      const from = document.getElementById('from-date').value;
-      const to = document.getElementById('to-date').value;
-      const tableContainer = document.getElementById('table-container');
-      const status = document.getElementById('status');
+      const from = document.getElementById("from-date").value;
+      const to = document.getElementById("to-date").value;
+      const tableContainer = document.getElementById("table-container");
+      const status = document.getElementById("status");
 
-      tableContainer.innerHTML = '';
-      status.innerText = '';
+      tableContainer.innerHTML = "";
+      status.innerText = "";
 
       if (!from || !to) {
         status.innerText = "Please select both dates.";
         return;
       }
 
+      if (from > to) {
+        status.innerText = "From date must be less than To date.";
+        return;
+      }
+
       const range = getDateRange(from, to);
+      const today = new Date().toISOString().split("T")[0];
+      const currentTimeKey = getCurrentTimeKey();
+
       const dateMap = {};
 
       for (const date of range) {
-        const snapshot = await db.ref('results/' + date).once('value');
+        const snapshot = await db.ref("results/" + date).once("value");
         const data = snapshot.val();
+
         if (data) {
           dateMap[date] = {};
+
           Object.values(data).forEach(entry => {
             dateMap[date][entry.time] = entry.number;
           });
@@ -243,42 +286,81 @@
       }
 
       if (Object.keys(dateMap).length === 0) {
-        status.innerText = "No results found in the selected range.";
+        status.innerText = "No results found in selected range.";
         return;
       }
 
-      let html = `<table>
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>Date</th>
-            ${showTimes.map(show => `<th>${show.label}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>`;
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Date</th>
+              ${showTimes.map(show => `<th>${show.label}</th>`).join("")}
+            </tr>
+          </thead>
+          <tbody>
+      `;
 
       let i = 1;
+
       for (const date of range) {
         const [yyyy, mm, dd] = date.split("-");
         const formattedDate = `${dd}-${mm}-${yyyy}`;
-        html += `<tr><td>${i++}</td><td>${formattedDate}</td>`;
+
+        html += `<tr>`;
+        html += `<td>${i++}</td>`;
+        html += `<td>${formattedDate}</td>`;
+
         for (const show of showTimes) {
-          const result = dateMap[date]?.[show.key];
-          html += `<td>${result || '-'}</td>`;
+          let result = "-";
+
+          if (dateMap[date] && dateMap[date][show.key]) {
+            result = dateMap[date][show.key];
+          }
+
+          /* FIX:
+             If selected date is today,
+             only show results up to current available time.
+             Example:
+             After 1PM => show till 01:00 PM
+             After 8PM => show full today result
+          */
+          if (date === today) {
+            if (!currentTimeKey) {
+              result = "-";
+            } else {
+              const showIndex = showTimes.findIndex(s => s.key === show.key);
+              const currentIndex = showTimes.findIndex(s => s.key === currentTimeKey);
+
+              if (showIndex > currentIndex) {
+                result = "-";
+              }
+            }
+          }
+
+          html += `<td>${result}</td>`;
         }
+
         html += `</tr>`;
       }
 
-      html += `</tbody></table>`;
+      html += `
+          </tbody>
+        </table>
+      `;
+
       tableContainer.innerHTML = `<div class="table-responsive">${html}</div>`;
     }
 
     window.onload = () => {
       const today = new Date().toISOString().split("T")[0];
-      document.getElementById("from-date").setAttribute("max", today);
-      document.getElementById("to-date").setAttribute("max", today);
+
+      document.getElementById("from-date").max = today;
+      document.getElementById("to-date").max = today;
     };
   </script>
+
 </body>
 
 </html>
