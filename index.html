@@ -385,62 +385,67 @@
   <!-- html2canvas -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-  <!-- FIXED DOWNLOAD -->
-  <script>
-    document.getElementById('downloadBtn').addEventListener('click', async function () {
 
-      const ok = confirm('Do you want to save the image?');
-      if (!ok) return;
+<script>
+document.getElementById('downloadBtn').addEventListener('click', async function () {
 
-      const container = document.getElementById('capture-container');
-      const ignored = container.querySelectorAll('.ignore-on-screenshot');
+  const ok = confirm('Do you want to save the image?');
+  if (!ok) return;
 
-      ignored.forEach(el => el.style.visibility = 'hidden');
+  const container = document.getElementById('capture-container');
+  const ignored = container.querySelectorAll('.ignore-on-screenshot');
 
-      const canvas = await html2canvas(container, {
-        allowTaint: true,
-        useCORS: true,
-        scale: 3,
-        backgroundColor: null,
-        width: container.offsetWidth,
-        height: container.offsetHeight,
-        scrollX: 0,
-        scrollY: 0
-      });
+  ignored.forEach(el => el.style.visibility = 'hidden');
 
-      /* MOBILE SIZE FIXED OUTPUT */
-      const mobileWidth = 720;
-      const mobileHeight = 1280;
+  /* Better sharp render */
+  const canvas = await html2canvas(container, {
+    allowTaint: true,
+    useCORS: true,
+    scale: 6,
+    backgroundColor: null,
+    width: container.offsetWidth,
+    height: container.offsetHeight,
+    scrollX: 0,
+    scrollY: 0,
+    letterRendering: true
+  });
 
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = mobileWidth;
-      finalCanvas.height = mobileHeight;
+  /* Exact final size */
+  const finalWidth = 768;
+  const finalHeight = 740;
 
-      const ctx = finalCanvas.getContext('2d');
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = finalWidth;
+  finalCanvas.height = finalHeight;
 
-      ctx.clearRect(0, 0, mobileWidth, mobileHeight);
+  const ctx = finalCanvas.getContext('2d');
 
-      const ratio = Math.min(
-        mobileWidth / canvas.width,
-        mobileHeight / canvas.height
-      );
+  /* Better font/text smoothing */
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
-      const newWidth = canvas.width * ratio;
-      const newHeight = canvas.height * ratio;
+  /* Full fit */
+  ctx.drawImage(
+    canvas,
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+    0,
+    0,
+    finalWidth,
+    finalHeight
+  );
 
-      const x = (mobileWidth - newWidth) / 2;
-      const y = (mobileHeight - newHeight) / 2;
+  const link = document.createElement('a');
+  link.download = 'BigBoss_Result.png';
+  link.href = finalCanvas.toDataURL('image/png', 1.0);
+  link.click();
 
-      ctx.drawImage(canvas, x, y, newWidth, newHeight);
+  ignored.forEach(el => el.style.visibility = 'visible');
 
-      const link = document.createElement('a');
-      link.download = 'BigBoss_Result.png';
-      link.href = finalCanvas.toDataURL('image/png');
-      link.click();
-
-      ignored.forEach(el => el.style.visibility = 'visible');
-    });
-  </script>
+});
+</script>
 
   <!-- AUDIO -->
   <audio id="bg-music" autoplay loop>
