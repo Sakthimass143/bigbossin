@@ -11,11 +11,14 @@
 
     gtag('config', 'G-VGFF9MD4M0');
   </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Result File Download - Big Boss</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+
   <style>
     body {
       font-family: 'Outfit', sans-serif;
@@ -53,6 +56,7 @@
       width: 90%;
       margin: 0;
       font-size: 16px;
+      padding: 10px;
     }
 
     .download-btns {
@@ -91,6 +95,13 @@
       margin-right: 0.5rem;
     }
 
+    #status {
+      text-align: center;
+      color: gray;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
     @media (max-width: 600px) {
       .input-section input {
         width: 90%;
@@ -117,16 +128,20 @@
 
   <section class="fade-in">
     <h2 style="text-align:center;">📥 Download Result File</h2>
+
     <div class="input-section">
       <label for="from-date">From:</label>
       <input type="date" id="from-date">
+
       <label for="to-date">To:</label>
       <input type="date" id="to-date">
     </div>
+
     <div class="download-btns">
       <button onclick="downloadCSV()">Download CSV</button>
     </div>
-    <p id="status" style="text-align:center; color: gray;"></p>
+
+    <p id="status"></p>
   </section>
 
   <footer class="fade-in">
@@ -137,7 +152,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    const firebaseConfig = {
+   const firebaseConfig = {
       apiKey: "AIzaSyBEuhWn0E9t0CXLqtl9JS0meW-UaIOJ69U",
       authDomain: "bigboss-99c00.firebaseapp.com",
       databaseURL: "https://bigboss-99c00-default-rtdb.firebaseio.com",
@@ -161,37 +176,73 @@
       { key: "20:00", label: "08:00 PM" }
     ];
 
-    function getDateRange(start, end) {
-      const range = [];
-      let current = new Date(start);
-      const last = new Date(end);
+    function getDateRange(startDate, endDate) {
+      const dates = [];
+      let current = new Date(startDate);
+      let last = new Date(endDate);
+
       while (current <= last) {
-        range.push(current.toISOString().split('T')[0]);
+        const y = current.getFullYear();
+        const m = String(current.getMonth() + 1).padStart(2, '0');
+        const d = String(current.getDate()).padStart(2, '0');
+
+        dates.push(`${y}-${m}-${d}`);
         current.setDate(current.getDate() + 1);
       }
-      return range;
+
+      return dates;
+    }
+
+    function getCurrentTimeKey() {
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+      let latest = null;
+
+      for (const show of showTimes) {
+        const parts = show.key.split(":");
+        const minutes = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+
+        if (currentMinutes >= minutes) {
+          latest = show.key;
+        }
+      }
+
+      return latest;
     }
 
     async function downloadCSV() {
-      const from = document.getElementById('from-date').value;
-      const to = document.getElementById('to-date').value;
-      const status = document.getElementById('status');
+      const from = document.getElementById("from-date").value;
+      const to = document.getElementById("to-date").value;
+      const status = document.getElementById("status");
 
-      status.innerText = '';
+      status.innerText = "";
+
       if (!from || !to) {
         status.innerText = "⚠️ Please select both From and To dates.";
         return;
       }
 
+      if (from > to) {
+        status.innerText = "⚠️ From date must be less than To date.";
+        return;
+      }
+
       status.innerText = "🔄 Fetching results...";
+
       const range = getDateRange(from, to);
+      const today = new Date().toISOString().split("T")[0];
+      const currentTimeKey = getCurrentTimeKey();
+
       const dateMap = {};
 
       for (const date of range) {
-        const snapshot = await db.ref('results/' + date).once('value');
+        const snapshot = await db.ref("results/" + date).once("value");
         const data = snapshot.val();
+
         if (data) {
           dateMap[date] = {};
+
           Object.values(data).forEach(entry => {
             dateMap[date][entry.time] = entry.number;
           });
@@ -199,39 +250,75 @@
       }
 
       if (Object.keys(dateMap).length === 0) {
-        status.innerText = "❌ No results found in the selected range.";
+        status.innerText = "❌ No results found in selected range.";
         return;
       }
 
-      let csv = "S.No,Date," + showTimes.map(st => st.label).join(",") + "\n";
+      let csv = "S.No,Date," + showTimes.map(s => s.label).join(",") + "\n";
+
       let i = 1;
+
       for (const date of range) {
-        const row = [i++, date];
-        for (const st of showTimes) {
-          const value = dateMap[date]?.[st.key] || "-";
+        const row = [];
+
+        const [yyyy, mm, dd] = date.split("-");
+        const formattedDate = `${dd}-${mm}-${yyyy}`;
+
+        row.push(i++);
+        row.push(formattedDate);
+
+        for (const show of showTimes) {
+          let value = "-";
+
+          if (dateMap[date] && dateMap[date][show.key]) {
+            value = dateMap[date][show.key];
+          }
+
+          /* FIX FOR TODAY CSV DOWNLOAD */
+          if (date === today) {
+            if (!currentTimeKey) {
+              value = "-";
+            } else {
+              const showIndex = showTimes.findIndex(s => s.key === show.key);
+              const currentIndex = showTimes.findIndex(s => s.key === currentTimeKey);
+
+              if (showIndex > currentIndex) {
+                value = "-";
+              }
+            }
+          }
+
           row.push(value);
         }
+
         csv += row.join(",") + "\n";
       }
 
       const filename = `results_${from}_to_${to}.csv`;
-      const blob = new Blob([csv], { type: 'text/csv' });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
+
+      const a = document.createElement("a");
       a.href = url;
       a.download = filename;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
+
       URL.revokeObjectURL(url);
 
-      status.innerText = `✅ File "${filename}" downloaded.`;
+      status.innerText = `✅ File "${filename}" downloaded successfully.`;
     }
 
     window.onload = () => {
       const today = new Date().toISOString().split("T")[0];
-      document.getElementById("from-date").setAttribute("max", today);
-      document.getElementById("to-date").setAttribute("max", today);
+
+      document.getElementById("from-date").max = today;
+      document.getElementById("to-date").max = today;
     };
   </script>
+
 </body>
 
 </html>
