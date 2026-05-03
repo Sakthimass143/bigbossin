@@ -585,27 +585,17 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  /* FIXED CONTENT SIZE + KEEP RATIO */
-  const ratio = Math.min(
-    finalWidth / canvas.width,
-    finalHeight / canvas.height
-  );
-
-  const drawWidth = canvas.width * ratio;
-  const drawHeight = canvas.height * ratio;
-
-  const x = (finalWidth - drawWidth) / 2;
-  const y = (finalHeight - drawHeight) / 2;
-
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, finalWidth, finalHeight);
-
+  /* Full fit */
   ctx.drawImage(
     canvas,
-    x,
-    y,
-    drawWidth,
-    drawHeight
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+    0,
+    0,
+    finalWidth,
+    finalHeight
   );
 
   const link = document.createElement('a');
