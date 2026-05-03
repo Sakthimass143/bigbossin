@@ -8,17 +8,15 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
+
     gtag('config', 'G-VGFF9MD4M0');
   </script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Big Boss</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -26,7 +24,6 @@
     body {
       height: 100%;
       margin: 0;
-      padding: 0;
     }
 
     body {
@@ -50,6 +47,11 @@
       font-weight: 800;
       letter-spacing: 1px;
       margin-top: 13px;
+      /* text-shadow: 0 1px 4px rgba(0, 119, 204, 0.1); */
+      /* display: inline-block;
+      border: 2px solid gold; */
+      /* padding: 2px 6px; */
+      /* border-radius: 4px; */
     }
 
     .logo-cont {
@@ -62,7 +64,6 @@
       border-radius: 4px;
       padding: 2px 6px;
       background-color: #000000;
-      box-sizing: border-box;
     }
 
     .draw-time-container {
@@ -72,8 +73,6 @@
       padding: 10px;
       flex-wrap: wrap;
       margin-top: 5%;
-      width: 100%;
-      box-sizing: border-box;
     }
 
     .draw-box {
@@ -87,9 +86,8 @@
       backdrop-filter: blur(5px);
       letter-spacing: 3px;
       text-align: center;
-      min-width: 100%;
+      min-width: 140%;
       border: gold 2px solid;
-      box-sizing: border-box;
     }
 
     #drawTime,
@@ -99,16 +97,65 @@
       font-size: 25px;
     }
 
+    /* .blinking-border {
+      display: flex;
+      position: relative;
+      padding: 40px;
+      background-color: #000000;
+      border-radius: 50%;
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 5%;
+    }
+
+    .blinking-border::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 10px dotted gold;
+      border-radius: 50%;
+      animation: blinkBorder 0.6s infinite;
+    }
+
+    @keyframes blinkBorder {
+
+      0%,
+      100% {
+        border-color: gold;
+      }
+
+      50% {
+        border-color: transparent;
+      }
+    } */
+
+    .digit {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      z-index: 1;
+    }
+
+    .blinking-row {
+      display: flex;
+      gap: 35px;
+      justify-content: center;
+      align-items: center;
+    }
+
     footer {
       margin-top: 50px;
       color: white;
-      text-align: center;
     }
 
     .main-section {
-      width: 100%;
-      display: flex;
-      justify-content: center;
+      margin-top: 5%;
     }
 
     .main-container {
@@ -117,26 +164,25 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 20px;
-      width: 95%;
-      max-width: 430px;
-      min-height: auto;
+      padding: 10%;
+      width: 90%;
+      max-width: 800px;
       border-radius: 20px;
       color: white;
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(30px);
       -webkit-backdrop-filter: blur(30px);
       box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-      margin: 10px auto;
-      box-sizing: border-box;
-      position: relative;
-      overflow: hidden;
+      margin-top: 30%;
     }
 
     .main-container::before {
       content: "";
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background-image: url('assets/home-page.gif');
       background-size: cover;
       background-position: center;
@@ -151,11 +197,11 @@
     }
 
     .game-type {
-      font-size: 35px;
+      font-size: 40px;
       color: gold;
       font-weight: 800;
+      /* text-shadow: 0 0 8px currentColor; */
       letter-spacing: 1.5px;
-      margin: 0;
     }
 
     .game-type-cont {
@@ -168,8 +214,6 @@
       text-align: center;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      box-sizing: border-box;
     }
 
     button {
@@ -193,6 +237,73 @@
       transform: scale(1.05);
     }
 
+    @media (max-width: 764px) {}
+
+    @media (max-width: 480px) {
+
+      button {
+        margin-top: -20px;
+      }
+
+      .game-type {
+        font-size: 30px !important;
+      }
+
+      .game-type-cont {
+        margin: 10%;
+      }
+
+      .main-section {
+        margin-top: -10%;
+      }
+
+      .main-container {
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        padding: 10%;
+        border-radius: 5%;
+        width: 85%;
+        margin-left: 30px;
+        margin-top: 5%;
+      }
+
+      .roller-container {
+        gap: 5px !important;
+      }
+
+      .game-type-cont {
+        padding: 6px;
+      }
+    }
+
+    .digit-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+
+
+    @media (min-width: 481px) and (max-width: 1024px) {
+      /* tablet styles */
+    }
+
+    @media (min-width: 1025px) {
+      .main-section {
+        margin-top: -10%;
+      }
+    }
+
+    .blinking-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin-top: 15px;
+    }
+
     .digit-container {
       display: flex;
       flex-direction: column;
@@ -200,48 +311,130 @@
       gap: 8px;
     }
 
-    .roller-container {
+    .led-label {
+      font-size: 24px;
+      font-weight: 900;
+      font-family: 'Outfit', sans-serif;
+      text-shadow: 0 0 8px currentColor;
+      animation: glow 1.5s ease-in-out infinite;
+    }
+
+    .led-label.a {
+      color: gold;
+    }
+
+    .led-label.b {
+      color: orange;
+    }
+
+    .led-label.c {
+      color: #00ccff;
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        text-shadow:
+          0 0 5px currentColor,
+          0 0 10px currentColor,
+          0 0 20px currentColor;
+      }
+
+      50% {
+        text-shadow:
+          0 0 3px currentColor,
+          0 0 6px currentColor;
+      }
+    }
+
+    .blinking-border {
       display: flex;
-      gap: 15px;
+      position: relative;
+      padding: 40px;
+      background-color: black;
+      border-radius: 50%;
+      text-align: center;
+      width: 30px;
+      height: 30px;
       justify-content: center;
       align-items: center;
-      flex-wrap: nowrap;
-      margin-top: 10px;
+    }
+
+    .blinking-border::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 10px dotted gold;
+      border-radius: 50%;
+      animation: blinkBorder 0.6s infinite;
+    }
+
+    @keyframes blinkBorder {
+
+      0%,
+      100% {
+        border-color: gold;
+      }
+
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    .digit {
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      z-index: 1;
+    }
+
+    .roller-container {
+      display: flex;
+      gap: 20px;
     }
 
     .digit-box {
       background: #111;
-      border: 4px solid gold;
+      border: 5px solid gold;
       border-radius: 15px;
-      width: 85px;
-      height: 110px;
+      width: 100px;
+      height: 130px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 4rem;
+      font-size: 5rem;
       color: gold;
-      box-shadow: 0 0 20px gold;
-      box-sizing: border-box;
+      box-shadow: 0 0 30px gold;
     }
+
+    /* .led-border {
+            border: 10px dotted gold;
+            border-radius: 15px;
+        } */
 
     .led-border {
       display: flex;
       position: relative;
       background-color: #000000;
       border-radius: 15px;
+      text-align: center;
       justify-content: center;
       align-items: center;
-      margin: 5px;
+      margin: 10px;
     }
 
     .led-border::before {
       content: "";
       position: absolute;
-      top: -8px;
-      left: -8px;
-      right: -8px;
-      bottom: -8px;
-      border: 8px dotted gold;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 10px dotted gold;
       border-radius: 15px;
       animation: blinkBorder 0.6s infinite;
     }
@@ -258,45 +451,22 @@
       }
     }
 
-    @media(max-width:480px) {
-      h1 {
-        font-size: 1.8rem;
-      }
-
-      .game-type {
-        font-size: 28px;
-      }
-
-      .digit-box {
-        width: 72px;
-        height: 95px;
-        font-size: 3.4rem;
-      }
-
-      .roller-container {
-        gap: 8px;
-      }
-
-      .main-container {
-        width: 96%;
-        padding: 15px;
-      }
-
-      .draw-box {
-        font-size: 18px;
-        letter-spacing: 1px;
-      }
-
-      #drawTime,
-      #remainingTime {
-        font-size: 20px;
-      }
-    }
+    /* .whatsapp-img {
+      position: fixed;
+      top: 25%;
+      right: 0;
+      transform: translateY(-50%);
+      height: 7%;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      padding: 5px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    } */
   </style>
 </head>
 
 <body>
-
   <header class="slide-down">
     <nav class="fade-in">
       <a href="index.html">Home</a>
@@ -308,73 +478,64 @@
   </header>
 
   <section class="main-section fade-in">
-
     <!-- Diwali Overlay -->
     <div id="diwali-overlay" aria-hidden="true" style="
-    position:fixed; inset:0; display:grid; place-items:center;
-    background: radial-gradient(1200px 800px at 50% 40%, rgba(0,0,0,.25), rgba(0,0,0,.75));
-    opacity:0; pointer-events:none; transition:opacity .4s ease; z-index:99999;">
-
+  position:fixed; inset:0; display:grid; place-items:center;
+  background: radial-gradient(1200px 800px at 50% 40%, rgba(0,0,0,.25), rgba(0,0,0,.75));
+  opacity:0; pointer-events:none; transition:opacity .4s ease; z-index:99999;">
       <div style="
-      background:rgba(0,0,0,.6); border:2px solid gold; border-radius:20px;
-      padding:28px 34px; text-align:center; color:#ffd700;
-      box-shadow:0 0 40px rgba(255,215,0,.35); backdrop-filter:blur(10px);">
-
-        <div style="font-size:54px;">🪔</div>
-        <h2 style="margin:6px 0 2px;">Happy Diwali!</h2>
-        <p style="color:#fff;">Wishing you joy, light, and prosperity</p>
+    background:rgba(0,0,0,.6); border:2px solid gold; border-radius:20px;
+    padding:28px 34px; text-align:center; color:#ffd700;
+    box-shadow:0 0 40px rgba(255,215,0,.35); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);">
+        <div style="font-size:54px; filter:drop-shadow(0 0 12px rgba(255,185,0,.6));">🪔</div>
+        <h2 style="margin:6px 0 2px; font-size:2rem; letter-spacing:1px;">Happy Diwali!</h2>
+        <p style="color:#fff; opacity:.9; margin:6px 0 0;">Wishing you joy, light, and prosperity</p>
       </div>
     </div>
 
+    <!-- <a href="https://whatsapp.com/channel/0029Vb5X8ad8KMqfOCcgRR0J" target="_blank">
+      <img class="whatsapp-img" src="assets/whatsapp.png" alt="">
+    </a> -->
     <div id="capture-container" class="main-container">
-
-      <p id="current-date" style="color: white; font-weight: bold; font-size: 18px; margin:0 0 10px 0;"></p>
-
+      <p id="current-date"
+        style="color: white; font-weight: bold; font-size: 18px; margin-top: -15%; margin-bottom: 5%;"></p>
       <div class="logo-cont">
-        <img width="50" height="50" src="assets/bigboss-logo.png">
+        <img width="50px" height="50px" src="assets/bigboss-logo.png" alt="">
         <h1>BIG BOSS</h1>
       </div>
-
       <div class="draw-time-container">
         <div class="draw-box">Draw Time: <span id="drawTime">--:--</span></div>
         <div class="draw-box ignore-on-screenshot">Remaining: <span id="remainingTime">--</span></div>
       </div>
-
       <div class="roller-container">
-
         <div class="digit-container">
-          <img height="45" src="assets/A.png">
+          <img height="50px" src="assets/A.png" alt="">
           <div class="led-border">
             <div class="digit-box" id="digit1">0</div>
           </div>
         </div>
-
         <div class="digit-container">
-          <img height="45" src="assets/B.png">
+          <img height="50px" src="assets/B.png" alt="">
           <div class="led-border">
             <div class="digit-box" id="digit2">0</div>
           </div>
         </div>
-
         <div class="digit-container">
-          <img height="45" src="assets/C.png">
+          <img height="50px" src="assets/C.png" alt="">
           <div class="led-border">
             <div class="digit-box" id="digit3">0</div>
           </div>
         </div>
-
       </div>
 
       <p id="result-status" class="ignore-on-screenshot"
-        style="margin-top:15px;color:white;font-weight:bold;font-size:20px;"></p>
+        style="margin-top: 5%; color: white; font-weight: bold;font-size: 20px;"></p>
 
       <div class="game-type-cont">
-        <img width="45" height="40" src="assets/bigboss-logo.png">
+        <img width="45px" height="40px" style="margin-bottom: 4px;" src="assets/bigboss-logo.png" alt="">
         <h2 class="game-type">3 Digit Game</h2>
       </div>
-
       <button class="ignore-on-screenshot" id="downloadBtn">Download</button>
-
     </div>
   </section>
 
@@ -382,10 +543,10 @@
     <p>© 2023 Big Boss | All Rights Reserved</p>
   </footer>
 
-  <!-- html2canvas -->
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-
 <script>
 document.getElementById('downloadBtn').addEventListener('click', async function () {
 
@@ -424,17 +585,27 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  /* Full fit */
+  /* FIXED CONTENT SIZE + KEEP RATIO */
+  const ratio = Math.min(
+    finalWidth / canvas.width,
+    finalHeight / canvas.height
+  );
+
+  const drawWidth = canvas.width * ratio;
+  const drawHeight = canvas.height * ratio;
+
+  const x = (finalWidth - drawWidth) / 2;
+  const y = (finalHeight - drawHeight) / 2;
+
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, finalWidth, finalHeight);
+
   ctx.drawImage(
     canvas,
-    0,
-    0,
-    canvas.width,
-    canvas.height,
-    0,
-    0,
-    finalWidth,
-    finalHeight
+    x,
+    y,
+    drawWidth,
+    drawHeight
   );
 
   const link = document.createElement('a');
@@ -447,7 +618,6 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
 });
 </script>
 
-  <!-- AUDIO -->
   <audio id="bg-music" autoplay loop>
     <source src="assets/music-for-page.mp3" type="audio/mpeg">
   </audio>
@@ -457,24 +627,21 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
       const audio = document.getElementById("bg-music");
       audio.volume = 0.2;
 
-      const playNow = () => {
+      const tryPlay = () => {
         audio.play().catch(() => {
           document.body.addEventListener("click", () => {
             audio.play();
           }, { once: true });
         });
       };
-
-      playNow();
+      tryPlay();
     });
   </script>
 
-  <!-- FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-
   <script>
-   const firebaseConfig = {
+    const firebaseConfig = {
       apiKey: "AIzaSyBEuhWn0E9t0CXLqtl9JS0meW-UaIOJ69U",
       authDomain: "bigboss-99c00.firebaseapp.com",
       databaseURL: "https://bigboss-99c00-default-rtdb.firebaseio.com",
@@ -498,10 +665,9 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
     function startRandomRun() {
       if (isRunning) return;
       isRunning = true;
-
-      randomInterval1 = setInterval(() => digit.textContent = Math.floor(Math.random() * 10), 100);
-      randomInterval2 = setInterval(() => digit1.textContent = Math.floor(Math.random() * 10), 102);
-      randomInterval3 = setInterval(() => digit2.textContent = Math.floor(Math.random() * 10), 105);
+      randomInterval1 = setInterval(() => { digit.textContent = Math.floor(Math.random() * 10); }, 100);
+      randomInterval2 = setInterval(() => { digit1.textContent = Math.floor(Math.random() * 10); }, 102);
+      randomInterval3 = setInterval(() => { digit2.textContent = Math.floor(Math.random() * 10); }, 105);
     }
 
     function stopRandomRun(number) {
@@ -509,7 +675,6 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
       clearInterval(randomInterval2);
       clearInterval(randomInterval3);
       isRunning = false;
-
       digit.textContent = number[0];
       digit1.textContent = number[1];
       digit2.textContent = number[2];
@@ -525,28 +690,20 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
 
     function formatCountdown(ms) {
       if (ms < 0) return "Result time passed";
-
       const totalSecs = Math.floor(ms / 1000);
       const hrs = Math.floor(totalSecs / 3600);
       const mins = Math.floor((totalSecs % 3600) / 60);
       const secs = totalSecs % 60;
-
       return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m ${secs}s`;
     }
 
     function displayCurrentDate() {
       const dateEl = document.getElementById('current-date');
       const now = new Date();
-
-      const options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      };
-
-      dateEl.innerText = now.toLocaleDateString('en-IN', options);
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      dateEl.innerText = now.toLocaleDateString('en-IN', options); // For Indian format
     }
+
 
     function fetchLatestDraw() {
       const today = new Date().toISOString().split('T')[0];
@@ -554,9 +711,7 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
       const currentTime = now.toTimeString().slice(0, 5);
 
       db.ref('results/' + today).once('value').then(snapshot => {
-
         const results = snapshot.val();
-
         const status = document.getElementById('result-status');
         const drawTimeEl = document.getElementById('drawTime');
         const remainingEl = document.getElementById('remainingTime');
@@ -570,7 +725,6 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
         }
 
         const entries = Object.values(results).sort((a, b) => a.time.localeCompare(b.time));
-
         let currentDraw = null;
         let nextDraw = null;
 
@@ -591,12 +745,14 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
           } else if (currentDraw) {
             drawTimeEl.innerText = formatTime12hr(currentDraw.time);
           } else {
-            drawTimeEl.innerText = '--:--';
+            drawTimeEl.innerText = "--:--";
           }
-
         } else if (currentDraw) {
           drawTimeEl.innerText = formatTime12hr(currentDraw.time);
           remainingEl.innerText = "No more draws today";
+        } else {
+          drawTimeEl.innerText = "--:--";
+          remainingEl.innerText = "--";
         }
 
         if (currentDraw && (!nextDrawTime || now < fiveMinBeforeNext)) {
@@ -605,10 +761,11 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
           startRandomRun();
         }
 
-        status.innerText = nextDraw
-          ? `🕒 Next result at ${formatTime12hr(nextDraw.time)}`
-          : `✅ All results released for today`;
-
+        if (nextDraw) {
+          status.innerText = `🕒 Next result at ${formatTime12hr(nextDraw.time)}`;
+        } else {
+          status.innerText = `✅ All results released for today`;
+        }
       }).catch(err => {
         console.error(err);
         document.getElementById('result-status').innerText = '❌ Error fetching result.';
@@ -619,6 +776,51 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
       displayCurrentDate();
       fetchLatestDraw();
       setInterval(fetchLatestDraw, 1000);
+    });
+
+
+  </script>
+  <script>
+    // IST date check (works regardless of user’s local timezone)
+    function isISTDate(y, m, d) {
+      const nowIST = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+      return nowIST.getFullYear() === y && (nowIST.getMonth() + 1) === m && nowIST.getDate() === d;
+    }
+
+    function celebrateDiwali(durationSec = 5) {
+      const overlay = document.getElementById('diwali-overlay');
+      if (!overlay || !window.confetti) return;
+
+      // show overlay
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+
+      const end = Date.now() + durationSec * 1000;
+
+      (function burst() {
+        // side bursts
+        confetti({ particleCount: 10, angle: 60, spread: 70, origin: { x: 0, y: 0.6 } });
+        confetti({ particleCount: 10, angle: 120, spread: 70, origin: { x: 1, y: 0.6 } });
+        // center sparkle
+        confetti({
+          particleCount: 6, startVelocity: 35, spread: 360, ticks: 120, scalar: 0.9,
+          origin: { x: Math.random(), y: Math.random() * 0.4 + 0.1 }
+        });
+
+        if (Date.now() < end) requestAnimationFrame(burst);
+        else {
+          // hide overlay after celebration
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+        }
+      })();
+    }
+
+    // Auto-run only on 20 Oct 2025 (IST), show for 5 seconds
+    document.addEventListener('DOMContentLoaded', function () {
+      if (isISTDate(2025, 10, 20)) {
+        celebrateDiwali(5);
+      }
     });
   </script>
 
