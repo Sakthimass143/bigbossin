@@ -5,7 +5,6 @@
   <meta charset="UTF-8" />
   <title>BIGBOSS - MC Draw</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     * {
       box-sizing: border-box;
@@ -35,18 +34,48 @@
       font-weight: bold;
     }
 
-    .wave-text span:nth-child(1) { animation-delay: 0s; }
-    .wave-text span:nth-child(2) { animation-delay: 0.2s; }
-    .wave-text span:nth-child(3) { animation-delay: 0.4s; }
-    .wave-text span:nth-child(4) { animation-delay: 0.6s; }
-    .wave-text span:nth-child(5) { animation-delay: 0.8s; }
-    .wave-text span:nth-child(6) { animation-delay: 1s; }
-    .wave-text span:nth-child(7) { animation-delay: 1.2s; }
-    .wave-text span:nth-child(8) { animation-delay: 1.4s; }
+    .wave-text span:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .wave-text span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .wave-text span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .wave-text span:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+
+    .wave-text span:nth-child(5) {
+      animation-delay: 0.8s;
+    }
+
+    .wave-text span:nth-child(6) {
+      animation-delay: 1s;
+    }
+
+    .wave-text span:nth-child(7) {
+      animation-delay: 1.2s;
+    }
+
+    .wave-text span:nth-child(8) {
+      animation-delay: 1.4s;
+    }
 
     @keyframes wave {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
     }
 
     .tap-txt {
@@ -66,10 +95,19 @@
       animation: jump 1s infinite;
     }
 
+    /* Jump animation */
     @keyframes jump {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
     }
+
 
     .lottery-card {
       width: 400px;
@@ -123,7 +161,7 @@
       margin: 15px auto;
       display: inline-block;
       border-radius: 8px;
-      background: #000;
+      background: rgb(0, 0, 0);
     }
 
     .number-boxes {
@@ -160,8 +198,13 @@
     }
 
     @keyframes pulseGlow {
-      0% { box-shadow: 0 0 10px #ff0, 0 0 20px #00f6ff; }
-      100% { box-shadow: 0 0 25px #fff200, 0 0 40px #00f6ff; }
+      0% {
+        box-shadow: 0 0 10px #ff0, 0 0 20px #00f6ff;
+      }
+
+      100% {
+        box-shadow: 0 0 25px #fff200, 0 0 40px #00f6ff;
+      }
     }
 
     .flot-header {
@@ -204,26 +247,20 @@
 </head>
 
 <body>
-
-  <div class="flot-header">
+  <div class="flot-header" style="">
     <div class="wave-container">
       <h1 class="wave-text">
-        <span>B</span><span>I</span><span>G</span><span>&nbsp;</span>
-        <span>B</span><span>O</span><span>S</span><span>S</span>
+        <span>B</span><span>I</span><span>G</span><span>&nbsp;</span><span>B</span><span>O</span><span>S</span><span>S</span>
       </h1>
     </div>
   </div>
-
   <div id="capture-wrapper">
     <div class="lottery-card">
       <div class="title">BIGBOSS - MC</div>
-
       <canvas class="stripes" id="stripeCanvas" width="400" height="10"></canvas>
-
       <div class="draw-time" id="drawTime">--:--</div>
       <div class="date" id="drawDate">--</div>
       <div class="tamil-day" id="drawDay">--</div>
-
       <div class="number-boxes" id="numberBoxes">
         <div class="digit-box">-</div>
         <div class="digit-box">-</div>
@@ -231,14 +268,10 @@
         <div class="digit-box">-</div>
         <div class="digit-box">-</div>
       </div>
-
       <div class="footer-glow"></div>
     </div>
   </div>
-
-  <div class="tap-txt">
-    Double tap on image to download <span class="jump-icon">☝️</span>
-  </div>
+  <div class="tap-txt">Double tap on image to download <span class="jump-icon">☝️</span></div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -248,12 +281,7 @@
 
   <script>
     const times = ['10:00', '11:00', '12:00', '13:00', '17:00', '18:00', '19:00', '20:00'];
-
-    const Days = [
-      'Sunday', 'Monday', 'Tuesday',
-      'Wednesday', 'Thursday',
-      'Friday', 'Saturday'
-    ];
+    const Days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     const drawTimeEl = document.getElementById("drawTime");
     const drawDateEl = document.getElementById("drawDate");
@@ -265,18 +293,11 @@
       const h = parseInt(hour);
       const period = h >= 12 ? "PM" : "AM";
       const hour12 = ((h + 11) % 12 + 1);
-
-      return `BB-${String(hour12).padStart(2, '0')}:${minute} ${period}`;
+      return `BB-${hour12.toString().padStart(2, '0')}:${minute} ${period}`;
     }
 
-    /* FIXED TIMEZONE BUG */
     function getTodayKey() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, '0');
-      const d = String(now.getDate()).padStart(2, '0');
-
-      return `${y}-${m}-${d}`;
+      return new Date().toISOString().split("T")[0];
     }
 
     function getTodayDisplay() {
@@ -291,88 +312,59 @@
       const now = new Date();
       const todayKey = getTodayKey();
 
-      db.ref("machineData/" + todayKey).get()
-        .then(snapshot => {
-          const data = snapshot.val() || {};
-          let displaySlot = null;
+      db.ref("machineData/" + todayKey).get().then(snapshot => {
+        const data = snapshot.val() || {};
+        let displaySlot = null;
 
-          /* FIXED SLOT LOGIC */
-          for (let i = 0; i < times.length; i++) {
-            const [h, m] = times[i].split(":");
+        for (let i = 0; i < times.length; i++) {
+          const [h, m] = times[i].split(":");
+          const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(h), parseInt(m));
+          const oneHourBefore = new Date(slotTime.getTime() - 60 * 60 * 1000);
 
-            const slotTime = new Date(
-              now.getFullYear(),
-              now.getMonth(),
-              now.getDate(),
-              parseInt(h),
-              parseInt(m)
-            );
-
-            if (now >= slotTime) {
-              displaySlot = times[i];
-            }
+          if (now >= oneHourBefore && now < slotTime) {
+            displaySlot = times[i];
+            break;
           }
-
-          drawDateEl.innerText = getTodayDisplay();
-          drawDayEl.innerText = getTamilDay();
-
-          if (displaySlot) {
-            drawTimeEl.innerText = formatTo12(displaySlot);
-
-            /* FIXED STRING/NUMBER VALUE BUG */
-            const rawValue = data[displaySlot];
-
-            const number =
-              rawValue != null &&
-              String(rawValue).trim() !== ""
-                ? String(rawValue)
-                : "-----";
-
-            updateDigits(number);
-
-          } else {
-            drawTimeEl.innerText = "--:--";
-            updateDigits("-----");
+          if (now >= slotTime) {
+            displaySlot = times[i];
           }
-        })
-        .catch(err => {
-          console.error("Firebase error:", err);
-          drawTimeEl.innerText = "--:--";
-          updateDigits("-----");
-        });
-    }
+        }
 
-    /* FIXED SAFE DIGITS */
-    function updateDigits(number) {
-      const digits = String(number)
-        .padEnd(5, '-')
-        .slice(0, 5)
-        .split('');
+        drawDateEl.innerText = getTodayDisplay();
+        drawDayEl.innerText = getTamilDay();
 
-      const boxes = numberBoxes.querySelectorAll(".digit-box");
-
-      boxes.forEach((box, i) => {
-        box.innerText = digits[i] || '-';
+        if (displaySlot) {
+          drawTimeEl.innerText = formatTo12(displaySlot);
+          const number = data[displaySlot] && data[displaySlot].trim() !== '' ? data[displaySlot] : '-----';
+          updateDigits(number);
+        } else {
+          drawTimeEl.innerText = '--:--';
+          updateDigits('-----');
+        }
+      }).catch(err => {
+        console.error("Firebase error:", err);
+        updateDigits('-----');
       });
     }
 
-    loadCard();
+    function updateDigits(number) {
+      const digits = number.padEnd(5, '-').split('');
+      const boxes = numberBoxes.querySelectorAll('.digit-box');
+      boxes.forEach((box, i) => box.innerText = digits[i] || '-');
+    }
 
-    /* REDUCED FIREBASE READS */
-    setInterval(loadCard, 30000);
+    loadCard();
+    setInterval(loadCard, 10000);
 
     function drawStripes(canvas = document.getElementById("stripeCanvas")) {
       if (!canvas) return;
-
       const ctx = canvas.getContext("2d");
       const stripeWidth = 20;
       const height = canvas.height;
 
       ctx.clearRect(0, 0, canvas.width, height);
-
       for (let x = -canvas.width; x < canvas.width * 2; x += stripeWidth) {
         ctx.fillStyle = (x / stripeWidth) % 2 === 0 ? "#000" : "#00f6ff";
-
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x + stripeWidth, 0);
@@ -382,23 +374,18 @@
         ctx.fill();
       }
     }
-
     drawStripes();
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
   <script>
     let lastTap = 0;
-
-    document.querySelector(".lottery-card").addEventListener("click", function () {
+    document.querySelector(".lottery-card").addEventListener("click", function (e) {
       const currentTime = new Date().getTime();
       const tapLength = currentTime - lastTap;
-
       if (tapLength < 400 && tapLength > 0) {
         captureCardAsImage();
       }
-
       lastTap = currentTime;
     });
 
@@ -406,20 +393,22 @@
       const original = document.querySelector(".lottery-card");
       const clone = original.cloneNode(true);
 
+      // Draw stripes on the cloned canvas
       const cloneStripeCanvas = clone.querySelector("#stripeCanvas");
       drawStripes(cloneStripeCanvas);
 
       clone.style.transform = "scale(2.5)";
       clone.style.transformOrigin = "top left";
       clone.style.margin = "100px";
+      clone.style.boxSizing = "border-box";
 
       const container = document.createElement("div");
       container.style.position = "absolute";
       container.style.top = "-9999px";
       container.style.left = "-9999px";
+      container.style.overflow = "visible";
       container.style.background = "#000";
       container.appendChild(clone);
-
       document.body.appendChild(container);
 
       setTimeout(() => {
@@ -429,27 +418,17 @@
           allowTaint: true,
           scale: 3
         }).then(canvas => {
-
           document.body.removeChild(container);
-
-          const finalCanvas = document.createElement("canvas");
+          const finalCanvas = document.createElement('canvas');
           finalCanvas.width = 1600;
           finalCanvas.height = 1600;
-
-          const ctx = finalCanvas.getContext("2d");
-          ctx.drawImage(canvas, 0, 0, 1600, 1600);
+          const ctx = finalCanvas.getContext('2d');
+          ctx.drawImage(canvas, 0, 0, finalCanvas.width, finalCanvas.height);
 
           const link = document.createElement("a");
-
-          /* FIXED DATE NAME */
-          link.download = `BIGBOSS-MC-${getTodayKey()}.png`;
-
+          link.download = `BIGBOSS-MC-${new Date().toISOString().split("T")[0]}.png`;
           link.href = finalCanvas.toDataURL("image/png");
-
-          document.body.appendChild(link);
           link.click();
-          document.body.removeChild(link);
-
         }).catch(err => {
           console.error("Image capture failed:", err);
           document.body.removeChild(container);
@@ -458,13 +437,12 @@
     }
 
     document.addEventListener("keydown", function (e) {
-      if (e.ctrlKey && e.key.toLowerCase() === "s") {
+      if (e.key === "s" && e.ctrlKey) {
         e.preventDefault();
         captureCardAsImage();
       }
     });
   </script>
-
 </body>
 
 </html>
