@@ -558,7 +558,35 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
 
   ignored.forEach(el => el.style.visibility = 'hidden');
 
-  /* Better sharp render */
+  /* Store original sizes */
+  const textElements = [
+    '.date-text',
+    '.title-text',
+    '.draw-time',
+    '.letter-label',
+    '.number-box',
+    '.bottom-title'
+  ];
+
+  const originals = [];
+
+  textElements.forEach(selector => {
+    document.querySelectorAll(selector).forEach(el => {
+      originals.push({
+        el,
+        fontSize: getComputedStyle(el).fontSize,
+        letterSpacing: getComputedStyle(el).letterSpacing
+      });
+
+      /* reduce only text size */
+      let current = parseFloat(getComputedStyle(el).fontSize);
+      el.style.fontSize = (current * 0.88) + 'px';
+
+      let spacing = parseFloat(getComputedStyle(el).letterSpacing) || 0;
+      el.style.letterSpacing = (spacing * 0.85) + 'px';
+    });
+  });
+
   const canvas = await html2canvas(container, {
     allowTaint: true,
     useCORS: true,
@@ -567,11 +595,9 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
     width: container.offsetWidth,
     height: container.offsetHeight,
     scrollX: 0,
-    scrollY: 0,
-    letterRendering: true
+    scrollY: 0
   });
 
-  /* Exact final size */
   const finalWidth = 768;
   const finalHeight = 740;
 
@@ -580,22 +606,13 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
   finalCanvas.height = finalHeight;
 
   const ctx = finalCanvas.getContext('2d');
-
-  /* Better font/text smoothing */
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
-  /* Full fit */
   ctx.drawImage(
     canvas,
-    0,
-    0,
-    canvas.width,
-    canvas.height,
-    0,
-    0,
-    finalWidth,
-    finalHeight
+    0, 0, canvas.width, canvas.height,
+    0, 0, finalWidth, finalHeight
   );
 
   const link = document.createElement('a');
@@ -603,11 +620,16 @@ document.getElementById('downloadBtn').addEventListener('click', async function 
   link.href = finalCanvas.toDataURL('image/png', 1.0);
   link.click();
 
+  /* Restore original text */
+  originals.forEach(item => {
+    item.el.style.fontSize = item.fontSize;
+    item.el.style.letterSpacing = item.letterSpacing;
+  });
+
   ignored.forEach(el => el.style.visibility = 'visible');
 
 });
 </script>
-
   <audio id="bg-music" autoplay loop>
     <source src="assets/music-for-page.mp3" type="audio/mpeg">
   </audio>
